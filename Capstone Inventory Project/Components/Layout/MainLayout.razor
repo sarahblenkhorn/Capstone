@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+
+@code {
+    private bool HideNav => NavigationManager.Uri.EndsWith("/login") || NavigationManager.Uri.EndsWith("/");
+}
+
+<div class="page">
+    @if (!HideNav)
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
+
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>

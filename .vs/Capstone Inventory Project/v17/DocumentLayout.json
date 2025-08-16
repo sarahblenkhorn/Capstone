@@ -1,0 +1,358 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\pages\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\pages\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\pages\\userpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\pages\\userpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\pages\\managerpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\pages\\managerpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\pages\\adminpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\pages\\adminpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\wwwroot\\bootstrap\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\wwwroot\\bootstrap\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\pages\\redirecttologin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\pages\\redirecttologin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\layout\\navmenu.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\layout\\navmenu.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\components\\pages\\requestnew.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\components\\pages\\requestnew.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\migrations\\20250812201423_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\migrations\\20250812201423_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\models\\equipmentrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\models\\equipmentrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|c:\\users\\sarah\\source\\repos\\capstone inventory project\\capstone inventory project\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC9A87E6-0621-421D-A709-BC8CC6AC3EFD}|Capstone Inventory Project\\Capstone Inventory Project.csproj|solutionrelative:capstone inventory project\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 9,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Program.cs",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Program.cs",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Program.cs",
+              "RelativeToolTip": "Capstone Inventory Project\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T16:54:09.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Routes.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Routes.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Routes.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Routes.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Routes.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T16:00:13.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "bootstrap.min.css",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\wwwroot\\bootstrap\\bootstrap.min.css",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\wwwroot\\bootstrap\\bootstrap.min.css",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\wwwroot\\bootstrap\\bootstrap.min.css",
+              "RelativeToolTip": "Capstone Inventory Project\\wwwroot\\bootstrap\\bootstrap.min.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-08-16T15:28:52.756Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "RedirectToLogin.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\RedirectToLogin.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Pages\\RedirectToLogin.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\RedirectToLogin.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Pages\\RedirectToLogin.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T15:16:33.809Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ManagerPage.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\ManagerPage.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Pages\\ManagerPage.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\ManagerPage.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Pages\\ManagerPage.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T15:09:30.561Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AdminPage.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\AdminPage.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Pages\\AdminPage.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\AdminPage.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Pages\\AdminPage.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T15:08:59.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T14:38:29.971Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "App.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\App.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\App.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\App.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T14:31:52.386Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "RequestNew.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\RequestNew.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Pages\\RequestNew.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\RequestNew.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Pages\\RequestNew.razor",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADkAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-16T14:12:42.385Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "SeedData.cs",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Data\\SeedData.cs",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Data\\SeedData.cs",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Data\\SeedData.cs",
+              "RelativeToolTip": "Capstone Inventory Project\\Data\\SeedData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T20:22:46.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "20250812201423_InitialCreate.cs",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Migrations\\20250812201423_InitialCreate.cs",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Migrations\\20250812201423_InitialCreate.cs",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Migrations\\20250812201423_InitialCreate.cs",
+              "RelativeToolTip": "Capstone Inventory Project\\Migrations\\20250812201423_InitialCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T20:14:23.298Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "NavMenu.razor.css",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Layout\\NavMenu.razor.css",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Layout\\NavMenu.razor.css",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Layout\\NavMenu.razor.css",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Layout\\NavMenu.razor.css",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAC4AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-08-12T20:08:44.999Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-12T20:08:39.623Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\_Imports.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\_Imports.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\_Imports.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\_Imports.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-12T20:03:32.979Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\appsettings.Development.json",
+              "RelativeToolTip": "Capstone Inventory Project\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-12T20:01:07.198Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\appsettings.json",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\appsettings.json",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\appsettings.json",
+              "RelativeToolTip": "Capstone Inventory Project\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-12T20:00:00.231Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Capstone Inventory Project\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T19:58:10.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "EquipmentRequest.cs",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Models\\EquipmentRequest.cs",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Models\\EquipmentRequest.cs",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Models\\EquipmentRequest.cs",
+              "RelativeToolTip": "Capstone Inventory Project\\Models\\EquipmentRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T19:56:27.132Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserPage.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\UserPage.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Pages\\UserPage.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\UserPage.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Pages\\UserPage.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-12T19:32:04.472Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Login.razor",
+              "DocumentMoniker": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\Login.razor",
+              "RelativeDocumentMoniker": "Capstone Inventory Project\\Components\\Pages\\Login.razor",
+              "ToolTip": "C:\\Users\\sarah\\source\\repos\\Capstone Inventory Project\\Capstone Inventory Project\\Components\\Pages\\Login.razor",
+              "RelativeToolTip": "Capstone Inventory Project\\Components\\Pages\\Login.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-07T22:59:01.096Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

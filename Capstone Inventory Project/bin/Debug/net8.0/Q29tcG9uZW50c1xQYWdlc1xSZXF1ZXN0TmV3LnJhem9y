@@ -1,0 +1,66 @@
+﻿@page "/request/new"
+@inject NavigationManager Nav
+@inject ApplicationDbContext Db
+@using Capstone_Inventory_Project.Models
+
+<h3>Equipment Request Form</h3>
+
+<EditForm Model="@model" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="model.RequesterName" />
+    </div>
+    <div class="mb-2">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="model.Email" />
+    </div>
+    <div class="mb-2">
+        <label>Your Department</label>
+        <InputText class="form-control" @bind-Value="model.Department" />
+    </div>
+    <div class="mb-2">
+        <label>Manager's Email</label>
+        <InputText class="form-control" @bind-Value="model.ManagerEmail" />
+    </div>
+    <div class="mb-2">
+        <label>Type of Equipment</label>
+        <InputSelect class="form-select" @bind-Value="model.EquipmentType">
+            <option value="">Select…</option>
+            <option>Laptop</option>
+            <option>Monitor</option>
+            <option>Keyboard</option>
+            <option>Mouse</option>
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label>Reason for request</label>
+        <InputTextArea class="form-control" rows="4" @bind-Value="model.Reason" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="btn btn-link" type="button" @onclick="@(() => Nav.NavigateTo("/"))">Cancel</button>
+</EditForm>
+
+@code {
+    private EquipmentRequest model = new();
+
+    protected override void OnInitialized()
+    {
+        model.RequesterName = "User Name";
+        model.Email = "jane@example.com";
+    }
+
+    private async Task HandleSubmit()
+    {
+        model.Status = "Pending";
+        model.SubmittedAt = DateTime.UtcNow;
+
+        Db.EquipmentRequests.Add(model);
+        await Db.SaveChangesAsync();
+
+        Nav.NavigateTo("/");
+    }
+}
