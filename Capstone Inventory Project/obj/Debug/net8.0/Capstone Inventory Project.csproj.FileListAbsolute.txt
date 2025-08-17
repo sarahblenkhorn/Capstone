@@ -168,3 +168,4 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone_Inventory_Project.pdb
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.genruntimeconfig.cache
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\ref\Capstone_Inventory_Project.dll
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.sourcelink.json

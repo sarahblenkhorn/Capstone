@@ -10,33 +10,55 @@ public static class SeedData
     {
         await db.Database.MigrateAsync();
 
-        if (!await db.EquipmentRequests.AnyAsync())
+        // Approved
+        if (!await db.EquipmentRequests.AnyAsync(r => r.Status == "Approved"))
         {
-            db.EquipmentRequests.AddRange(
-                new EquipmentRequest
-                {
-                    RequesterName = "User Name",
-                    Email = "jane@example.com",
-                    Department = "Sales",
-                    ManagerEmail = "mgr@example.com",
-                    EquipmentType = "Laptop",
-                    Reason = "Old device failing",
-                    Status = "Approved",
-                    SubmittedAt = DateTime.UtcNow.AddDays(-3)
-                },
-                new EquipmentRequest
-                {
-                    RequesterName = "User Name",
-                    Email = "jane@example.com",
-                    Department = "Ops",
-                    ManagerEmail = "mgr@example.com",
-                    EquipmentType = "Monitor",
-                    Reason = "Dual monitor setup",
-                    Status = "Pending",
-                    SubmittedAt = DateTime.UtcNow.AddDays(-1)
-                }
-            );
-            await db.SaveChangesAsync();
+            db.EquipmentRequests.Add(new EquipmentRequest
+            {
+                RequesterName = "User Name",
+                Email = "jane@example.com",
+                Department = "Sales",
+                ManagerEmail = "mgr@example.com",
+                EquipmentType = "Laptop",
+                Reason = "Old device failing",
+                Status = "Approved",
+                SubmittedAt = DateTime.UtcNow.AddDays(-3)
+            });
         }
+
+        // Pending
+        if (!await db.EquipmentRequests.AnyAsync(r => r.Status == "Pending"))
+        {
+            db.EquipmentRequests.Add(new EquipmentRequest
+            {
+                RequesterName = "User Name",
+                Email = "jane@example.com",
+                Department = "Ops",
+                ManagerEmail = "mgr@example.com",
+                EquipmentType = "Monitor",
+                Reason = "Dual monitor setup",
+                Status = "Pending",
+                SubmittedAt = DateTime.UtcNow.AddDays(-1)
+            });
+        }
+
+        // Denied
+        if (!await db.EquipmentRequests.AnyAsync(r => r.Status == "Denied"))
+        {
+            db.EquipmentRequests.Add(new EquipmentRequest
+            {
+                RequesterName = "User Name",
+                Email = "jane@example.com",
+                Department = "Ops",
+                ManagerEmail = "mgr@example.com",
+                EquipmentType = "Monitor",
+                Reason = "Dual monitor setup",
+                Status = "Denied",
+                SubmittedAt = DateTime.UtcNow.AddDays(-1)
+            });
+        }
+
+        await db.SaveChangesAsync();
     }
+
 }
