@@ -1,0 +1,390 @@
+﻿@page "/admin"
+@page "/AdminPage"
+@using Capstone_Inventory_Project.Models
+@inject ApplicationDbContext Db
+@inject NavigationManager Nav
+@rendermode InteractiveServer
+
+<style>
+    .scroll-box {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+    }
+        .scroll-box thead th {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+    .user-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .user-box {
+        width: 100%;
+        max-width: 1000px;
+        padding: 2.25rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,.1);
+        position: relative;
+    }
+
+    .signout-link {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .user-header {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin: 1.75rem 0 .5rem;
+    }
+
+        .section-title + hr {
+            margin: .4rem 0 1.1rem;
+        }
+
+    .small-muted {
+        font-size: .9rem;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+        .table thead th {
+            padding: 12px 16px;
+            font-weight: 700;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .table tbody tr {
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        .table tbody td {
+            padding: 14px 16px;
+        }
+
+        .table th:nth-child(1), .table td:nth-child(1) {
+            width: 180px;
+        }
+
+        .table th:nth-child(2), .table td:nth-child(2) {
+            width: 240px;
+        }
+
+        .table th:nth-child(4), .table td:nth-child(4) {
+            width: 140px;
+        }
+
+        .table th:nth-child(5), .table td:nth-child(5) {
+            width: 210px;
+        }
+
+    .req-meta {
+        display: grid;
+        gap: 2px;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+
+    .btn + .btn {
+        margin-left: 8px;
+    }
+
+    .block {
+        margin-bottom: 28px;
+    }
+</style>
+
+<div class="user-container">
+    <div class="user-box">
+        <a class="signout-link" href="/login">Sign out</a>
+
+        <div class="user-header">
+            <h2 class="form-title">Hello, Admin</h2>
+        </div>
+
+        <div class="block">
+            <h2 class="section-title">All Requests</h2>
+            <hr />
+            @if (_requests is null)
+            {
+                <p>Loading…</p>
+            }
+            else if (_requests.Count == 0)
+            {
+                <p>No requests yet.</p>
+            }
+            else
+            {
+                <div class="scroll-box">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Submitted</th>
+                                <th>Requester</th>
+                                <th>Equipment</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in _requests)
+                            {
+                                var canAssign = r.Status == "Approved" && _availableCounts.TryGetValue(r.EquipmentType ?? "", out var cnt) && cnt > 0;
+                                <tr>
+                                    <td>@r.SubmittedAt.ToLocalTime().ToString("g")</td>
+                                    <td>
+                                        <div class="req-meta">
+                                            <strong>@r.RequesterName</strong>
+                                            <div class="small-muted">@r.Email</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>@r.EquipmentType</div>
+                                        @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                        {
+                                            <div class="small-muted">@r.Reason</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch (r.Status)
+                                        {
+                                            case "Approved":
+                                                <span style="color:#0b7a28;font-weight:700">Approved</span>
+                                                ; break;
+                                            case "Denied":
+                                                <span style="color:#9b1c1c;font-weight:700">Denied</span>
+                                                ; break;
+                                            case "Pending":
+                                                <span style="color:#8a6d00;font-weight:700">Pending</span>
+                                                ; break;
+                                            case "Fulfilled":
+                                                <span style="color:#2563eb;font-weight:700">Fulfilled</span>
+                                                ; break;
+                                            default:
+                                                <span>@r.Status</span>
+                                                ; break;
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        @if (canAssign)
+                                        {
+                                            <button class="btn btn-sm btn-dark me-2" disabled="@_busy" @onclick="@(() => AssignFirstAvailableAsync(r.Id))">
+                                                Assign Inventory (@_availableCounts[r.EquipmentType!])
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm btn-outline-secondary me-2" disabled>Assign Inventory</button>
+                                        }
+                                        <a class="btn btn-sm btn-outline-primary" href="@($"/request/{r.Id}")">Open</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        <div class="block">
+            <h2 class="section-title">Current Inventory</h2>
+            <hr />
+            @if (_currentInv is null)
+            {
+                <p>Loading…</p>
+            }
+            else if (_currentInv.Count == 0)
+            {
+                <p>No inventory items yet.</p>
+            }
+            else
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Equipment</th>
+                            <th>Model</th>
+                            <th>Serial #</th>
+                            <th>Status</th>
+                            <th>Assigned To</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in _currentInv)
+                        {
+                            <tr>
+                                <td>@i.EquipmentType</td>
+                                <td>@(i.Model ?? "-")</td>
+                                <td>@(i.SerialNumber ?? "-")</td>
+                                <td>@i.Status</td>
+                                <td>@(string.IsNullOrWhiteSpace(i.AssignedTo) ? "-" : i.AssignedTo)</td>
+                                <td class="text-end">
+                                    @if (i.Status == "Assigned")
+                                    {
+                                        <button class="btn btn-sm btn-outline-dark" disabled="@_busy" @onclick="@(() => MarkReturnedAsync(i.Id))">Mark Returned</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>Mark Returned</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        <div class="block">
+            <h2 class="section-title">Returned Inventory</h2>
+            <hr />
+            @if (_returnedInv is null)
+            {
+                <p>Loading…</p>
+            }
+            else if (_returnedInv.Count == 0)
+            {
+                <p>No returned items.</p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Equipment</th>
+                            <th>Model</th>
+                            <th>Serial #</th>
+                            <th>Returned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in _returnedInv)
+                        {
+                            <tr>
+                                <td>@i.EquipmentType</td>
+                                <td>@(i.Model ?? "-")</td>
+                                <td>@(i.SerialNumber ?? "-")</td>
+                                <td>@i.ReturnDate?.ToLocalTime().ToString("g")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private List<EquipmentRequest>? _requests;
+    private List<InventoryItem>? _currentInv;
+    private List<InventoryItem>? _returnedInv;
+    private Dictionary<string, int> _availableCounts = new(StringComparer.OrdinalIgnoreCase);
+    private bool _busy;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _requests = await Db.EquipmentRequests
+                            .OrderByDescending(r => r.SubmittedAt)
+                            .ToListAsync();
+
+        _currentInv = await Db.InventoryItems
+                              .Where(i => i.Status == "Available" || i.Status == "Assigned")
+                              .OrderBy(i => i.EquipmentType).ThenBy(i => i.Status)
+                              .ToListAsync();
+
+        _returnedInv = await Db.InventoryItems
+                               .Where(i => i.Status == "Returned")
+                               .OrderByDescending(i => i.ReturnDate)
+                               .ToListAsync();
+
+        _availableCounts = await Db.InventoryItems
+                                   .Where(i => i.Status == "Available")
+                                   .GroupBy(i => i.EquipmentType)
+                                   .Select(g => new { g.Key, Count = g.Count() })
+                                   .ToDictionaryAsync(x => x.Key ?? "", x => x.Count, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private async Task AssignFirstAvailableAsync(int requestId)
+    {
+        if (_busy) return;
+        _busy = true;
+        try
+        {
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (req is null) return;
+
+            var item = await Db.InventoryItems
+                               .Where(i => i.EquipmentType == req.EquipmentType && i.Status == "Available")
+                               .OrderBy(i => i.Id)
+                               .FirstOrDefaultAsync();
+
+            if (item is null) return;
+
+            item.Status = "Assigned";
+            item.AssignedTo = req.Email;
+            item.AssignedRequestId = req.Id;
+            item.AssignedAt = DateTime.UtcNow;
+
+            req.Status = "Fulfilled";
+
+            await Db.SaveChangesAsync();
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+
+    private async Task MarkReturnedAsync(int itemId)
+    {
+        if (_busy) return;
+        _busy = true;
+        try
+        {
+            var item = await Db.InventoryItems.FirstOrDefaultAsync(i => i.Id == itemId);
+            if (item is null) return;
+
+            item.Status = "Returned";
+            item.ReturnDate = DateTime.UtcNow;
+            item.AssignedTo = null;
+
+            await Db.SaveChangesAsync();
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+}
