@@ -1,0 +1,141 @@
+﻿@page "/request/new"
+@page "/request"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.WebUtilities
+@using Capstone_Inventory_Project.Models
+@inject NavigationManager Nav
+@inject ApplicationDbContext Db
+
+<style>
+    .form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #f8f9fa;
+    }
+
+    .form-box {
+        width: 100%;
+        max-width: 520px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,.1);
+        padding: 2rem;
+        position: relative;
+    }
+
+    .form-title {
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .form-input, .form-select, .form-textarea {
+        width: 100%;
+        margin: .5rem 0;
+        padding: .7rem .9rem;
+        border: 1px solid #9a9a9a;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: #666;
+        }
+
+    .form-textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .submit-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        gap: .75rem;
+    }
+
+    .submit-btn {
+        width: 160px;
+        padding: .6rem 1rem;
+        border: none;
+        border-radius: 8px;
+        background: #222;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        width: 120px;
+        padding: .6rem 1rem;
+        border: 1px solid #999;
+        border-radius: 8px;
+        background: #fff;
+        color: #333;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-box">
+        <h3 class="form-title">Equipment Request Form</h3>
+
+        <input class="form-input" placeholder="Name" @bind="model.RequesterName" />
+        <input class="form-input" placeholder="Email" @bind="model.Email" />
+        <input class="form-input" placeholder="Your Department" @bind="model.Department" />
+        <input class="form-input" placeholder="Manager's Email" @bind="model.ManagerEmail" />
+
+        <select class="form-select" @bind="model.EquipmentType">
+            <option value="">Type of Equipment</option>
+            <option>Laptop</option>
+            <option>Monitor</option>
+            <option>Keyboard</option>
+            <option>Mouse</option>
+            <option>Dock</option>
+            <option>Headset</option>
+        </select>
+
+        <textarea class="form-textarea" placeholder="Reason for request" @bind="model.Reason"></textarea>
+
+        <div class="submit-wrap">
+            <button class="submit-btn" @onclick="HandleSubmit">Submit</button>
+            <button class="cancel-btn" @onclick="Cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private EquipmentRequest model = new();
+    private string? returnUrl;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var q = QueryHelpers.ParseQuery(uri.Query);
+        if (q.TryGetValue("return", out var val) && !string.IsNullOrWhiteSpace(val))
+        {
+            returnUrl = Uri.UnescapeDataString(val!);
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo(returnUrl ?? "/user");
+    }
+
+    private async Task HandleSubmit()
+    {
+        model.Status = "Pending";
+        model.SubmittedAt = DateTime.UtcNow;
+
+        Db.EquipmentRequests.Add(model);
+        await Db.SaveChangesAsync();
+
+        Nav.NavigateTo(returnUrl ?? "/user?submitted=1");
+    }
+}
