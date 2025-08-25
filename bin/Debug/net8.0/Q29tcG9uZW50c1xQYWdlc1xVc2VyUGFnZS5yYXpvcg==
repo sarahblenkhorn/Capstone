@@ -1,4 +1,5 @@
 ﻿@page "/user"
+@using Microsoft.EntityFrameworkCore
 @inject NavigationManager Nav
 @inject ApplicationDbContext Db
 @rendermode InteractiveServer
@@ -8,8 +9,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        background-color: #f8f9fa;
+        min-height: 100vh;
+        background: #f8f9fa;
+        padding: 24px 16px;
     }
 
     .user-box {
@@ -18,8 +20,8 @@
         padding: 2rem;
         border: 1px solid #ccc;
         border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,.1);
         position: relative;
     }
 
@@ -31,13 +33,25 @@
 
     .user-header {
         text-align: center;
-        margin-top: 2rem; 
+        margin-top: .5rem;
     }
 
     .request-button {
         display: flex;
         justify-content: center;
-        margin: 1.5rem 0;
+        margin: 1rem 0 .5rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: .75rem 0 .25rem;
+    }
+
+    .scroll-pane {
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: .25rem;
     }
 
     .request-list {
@@ -45,11 +59,28 @@
         margin-left: 0;
     }
 
-    .request-list li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: .25rem 0;
+        .request-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .5rem 0;
+            gap: .75rem;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+    .req-main {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .req-title {
+        font-weight: 600;
+        display: block;
+    }
+
+    .req-meta {
+        font-size: .9rem;
+        color: #6c757d;
     }
 
     .request-status {
@@ -87,58 +118,127 @@
         </div>
 
         <div class="request-button">
-            <button class="btn btn-primary" @onclick="HandleNew">
-                Submit a New Request
-            </button>
+            <button class="btn btn-primary" @onclick="HandleNew">Submit a New Request</button>
         </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h2 class="form-title mb-0">My Requests</h2>
-        </div>
-        <hr />
-
 
         @if (!string.IsNullOrEmpty(loadError))
         {
             <div class="alert alert-danger">@loadError</div>
         }
-        else if (requests is null)
+        else if (allRequests is null)
         {
             <p class="text-center">Loading…</p>
         }
-        else if (requests.Count == 0)
-        {
-            <p class="text-center">No requests yet.</p>
-        }
         else
         {
-            <ul class="list-unstyled mt-3 request-list">
-                @foreach (var r in requests)
-                {
-                    <li class="d-flex align-items-center justify-content-between mb-2">
-                        <a href="@($"/request/{r.Id}")">Request @r.Id</a>
-                        <span class="@($"status-badge {StatusClass(r.Status)}")">
-                            @r.Status
-                        </span>
-                    </li>
-                }
-            </ul>
+            <!-- Current (Pending) -->
+            <h3 class="section-title">Current Requests</h3>
+            <hr class="mt-1 mb-2" />
+            @if (pendingRequests.Count == 0)
+            {
+                <p class="text-muted">No current requests.</p>
+            }
+            else
+            {
+                <div class="scroll-pane">
+                    <ul class="list-unstyled request-list">
+                        @foreach (var r in pendingRequests)
+                        {
+                            <li>
+                                <div class="req-main">
+                                    <a class="req-title" href="@($"/request/{r.Id}")">Request @r.Id</a>
+                                    <div class="req-meta">
+                                        Submitted @r.SubmittedAt.ToLocalTime().ToString("g")
+                                        &middot; @r.EquipmentType
+                                        @if (!string.IsNullOrWhiteSpace(r.EquipmentModel))
+                                        {
+                                            <text>&middot; Model @r.EquipmentModel</text>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(r.EquipmentSerial))
+                                        {
+                                            <text>&middot; Serial @r.EquipmentSerial</text>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                        {
+                                            <text>&middot; Reason: @r.Reason</text>
+                                        }
+                                    </div>
+                                </div>
+                                <span class="request-status @StatusClass(r.Status)">@r.Status</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Past -->
+            <h3 class="section-title mt-3">Past Requests</h3>
+            <hr class="mt-1 mb-2" />
+            @if (pastRequests.Count == 0)
+            {
+                <p class="text-muted">No past requests yet.</p>
+            }
+            else
+            {
+                <div class="scroll-pane">
+                    <ul class="list-unstyled request-list">
+                        @foreach (var r in pastRequests)
+                        {
+                            <li>
+                                <div class="req-main">
+                                    <a class="req-title" href="@($"/request/{r.Id}")">Request @r.Id</a>
+                                    <div class="req-meta">
+                                        Submitted @r.SubmittedAt.ToLocalTime().ToString("g")
+                                        &middot; @r.EquipmentType
+                                        @if (!string.IsNullOrWhiteSpace(r.EquipmentModel))
+                                        {
+                                            <text>&middot; Model @r.EquipmentModel</text>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(r.EquipmentSerial))
+                                        {
+                                            <text>&middot; Serial @r.EquipmentSerial</text>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                        {
+                                            <text>&middot; Reason: @r.Reason</text>
+                                        }
+                                    </div>
+                                </div>
+                                <span class="request-status @StatusClass(r.Status)">@r.Status</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
         }
     </div>
 </div>
 
 @code {
     private string DisplayName = "User";
-    private List<EquipmentRequest>? requests;
+    private List<EquipmentRequest>? allRequests;
+    private List<EquipmentRequest> pendingRequests = new();
+    private List<EquipmentRequest> pastRequests = new();
     private string? loadError;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
     {
         try
         {
-            requests = await Db.EquipmentRequests
-                .OrderByDescending(r => r.SubmittedAt)
-                .ToListAsync();
+            allRequests = await Db.EquipmentRequests
+              .Where(r => !r.IsClosed)
+              .OrderByDescending(r => r.SubmittedAt)
+              .ToListAsync();
+
+            pendingRequests = allRequests
+              .Where(r => r.Status == "Pending" || r.Status == "Needs More Info" || r.Status == "Approved")
+              .ToList();
+
+            pastRequests = allRequests
+              .Where(r => !(r.Status == "Pending" || r.Status == "Needs More Info"))
+              .ToList();
         }
         catch (Exception ex)
         {
@@ -153,6 +253,7 @@
         "Approved" => "status-approved",
         "Denied" => "status-denied",
         "Needs More Info" or "Pending" => "status-pending",
+        "Cancelled" => "status-neutral",
         _ => "status-neutral"
     };
 }

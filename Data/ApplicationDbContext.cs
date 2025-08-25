@@ -13,11 +13,19 @@ namespace Capstone_Inventory_Project.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<EquipmentRequest>()
                         .HasIndex(e => new { e.Email, e.SubmittedAt });
 
-            modelBuilder.Entity<InventoryItem>()
-                        .HasIndex(i => new { i.EquipmentType, i.Status });
+            modelBuilder.Entity<InventoryItem>(b =>
+            {
+                b.Property(i => i.Status)
+                 .HasMaxLength(30)
+                 .HasDefaultValue("Available");
+                b.HasIndex(i => new { i.EquipmentType, i.Status });
+                b.HasIndex(i => i.EquipmentSerial);
+            });
         }
+
     }
 }

@@ -1,0 +1,192 @@
+﻿@page "/request/{id:int}"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Capstone_Inventory_Project.Models
+@inject NavigationManager Nav
+@inject ApplicationDbContext Db
+@inject IJSRuntime JS
+
+<style>
+    .user-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f8f9fa;
+    }
+
+    .user-box {
+        width: 100%;
+        max-width: 700px;
+        padding: 2rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,.1);
+        background: #fff;
+        position: relative;
+    }
+
+    .signout-link {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .user-header {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .status-approved {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status-denied {
+        color: red;
+        font-weight: bold;
+    }
+
+    .status-pending {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .status-neutral {
+        color: gray;
+        font-weight: bold;
+    }
+
+    .detail-row {
+        display: flex;
+        gap: 1rem;
+        padding: .35rem 0;
+    }
+
+    .detail-label {
+        width: 140px;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .detail-value {
+        flex: 1;
+        word-break: break-word;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: .5rem;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="user-container">
+    <div class="user-box">
+        <a class="signout-link" href="@(from == "manager" ? "/manager" : "/user")">Back to My Requests</a>
+
+
+        <div class="user-header">
+            <h2 class="form-title mb-0">Request Details</h2>
+            @if (req != null)
+                        {
+            <div class="@StatusClass(req.Status)" style="margin-top:.25rem;">
+                @req.Status
+            </div>
+                        }
+        </div>
+
+        @if (!string.IsNullOrEmpty(loadError))
+        {
+            <div class="alert alert-danger mt-3">@loadError</div>
+        }
+        else if (isLoading)
+        {
+            <p class="text-center mt-3">Loading…</p>
+        }
+        else if (req == null)
+        {
+            <div class="alert alert-warning mt-3">Request not found.</div>
+        }
+        else
+        {
+            <div class="mt-4">
+                <div class="detail-row"><div class="detail-label">Request #</div><div class="detail-value">@req.Id</div></div>
+                <div class="detail-row"><div class="detail-label">Submitted</div><div class="detail-value">@req.SubmittedAt.ToLocalTime().ToString("f")</div></div>
+                <div class="detail-row"><div class="detail-label">Type</div><div class="detail-value">@req.EquipmentType</div></div>
+
+                @if (!string.IsNullOrWhiteSpace(req.EquipmentModel))
+                {
+                    <div class="detail-row"><div class="detail-label">Model</div><div class="detail-value">@req.EquipmentModel</div></div>
+                }
+                @if (!string.IsNullOrWhiteSpace(req.EquipmentSerial))
+                {
+                    <div class="detail-row"><div class="detail-label">Serial</div><div class="detail-value">@req.EquipmentSerial</div></div>
+                }
+                @if (!string.IsNullOrWhiteSpace(req.Reason))
+                {
+                    <div class="detail-row"><div class="detail-label">Reason</div><div class="detail-value">@req.Reason</div></div>
+                }
+
+                <div class="btn-row">
+                    <button class="btn btn-secondary" @onclick="GoBack">Back</button>
+
+                    @if (req.Status == "Pending")
+                    {
+                        <button class="btn btn-warning" @onclick="CancelThis">Cancel Request</button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int id { get; set; }
+    [SupplyParameterFromQuery] public string? from { get; set; }
+    private EquipmentRequest req;
+    private bool isLoading = true;
+    private string loadError;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            isLoading = true;
+            req = await Db.EquipmentRequests.FindAsync(id);
+        }
+        catch (Exception ex)
+        {
+            loadError = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private string StatusClass(string status)
+    {
+        if (status == "Approved") return "status-approved";
+        if (status == "Denied") return "status-denied";
+        if (status == "Needs More Info" || status == "Pending") return "status-pending";
+        if (status == "Cancelled") return "status-neutral";
+        return "status-neutral";
+    }
+
+    private async Task CancelThis()
+    {
+        if (req == null || req.Status != "Pending") return;
+
+        var ok = await JS.InvokeAsync<bool>("confirm", "Cancel this request?");
+        if (!ok) return;
+
+        req.Status = "Cancelled";
+        req.IsClosed = true;
+        await Db.SaveChangesAsync();
+
+        StateHasChanged();
+    }
+
+    private void GoBack() => Nav.NavigateTo(from == "manager" ? "/manager" : "/user");
+}

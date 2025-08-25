@@ -1,10 +1,41 @@
 ﻿@page "/request/new"
-@page "/request"
 @rendermode InteractiveServer
-@using Microsoft.AspNetCore.WebUtilities
-@using Capstone_Inventory_Project.Models
 @inject NavigationManager Nav
 @inject ApplicationDbContext Db
+
+@code {
+    private EquipmentRequest model = new();
+    private string? error;
+
+    [SupplyParameterFromQuery(Name = "return")]
+    public string? Return { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        error = null;
+        try
+        {
+            model.Status = "Pending";
+            model.SubmittedAt = DateTime.UtcNow;
+
+            Db.EquipmentRequests.Add(model);
+            await Db.SaveChangesAsync();
+
+            var dest = string.IsNullOrWhiteSpace(Return) ? "/user" : Return!;
+            Nav.NavigateTo(dest);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+
+    private void Cancel()
+    {
+        var dest = string.IsNullOrWhiteSpace(Return) ? "/user" : Return!;
+        Nav.NavigateTo(dest);
+    }
+}
 
 <style>
     .form-container {
@@ -42,10 +73,6 @@
         font-size: 1rem;
     }
 
-        .form-input::placeholder, .form-textarea::placeholder {
-            color: #666;
-        }
-
     .form-textarea {
         min-height: 110px;
         resize: vertical;
@@ -53,9 +80,9 @@
 
     .submit-wrap {
         display: flex;
+        gap: .5rem;
         justify-content: center;
         margin-top: 1rem;
-        gap: .75rem;
     }
 
     .submit-btn {
@@ -72,11 +99,9 @@
     .cancel-btn {
         width: 120px;
         padding: .6rem 1rem;
-        border: 1px solid #999;
+        border: 1px solid #888;
         border-radius: 8px;
         background: #fff;
-        color: #333;
-        font-weight: 600;
         cursor: pointer;
     }
 </style>
@@ -85,57 +110,39 @@
     <div class="form-box">
         <h3 class="form-title">Equipment Request Form</h3>
 
-        <input class="form-input" placeholder="Name" @bind="model.RequesterName" />
-        <input class="form-input" placeholder="Email" @bind="model.Email" />
-        <input class="form-input" placeholder="Your Department" @bind="model.Department" />
-        <input class="form-input" placeholder="Manager's Email" @bind="model.ManagerEmail" />
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="alert alert-danger" role="alert">@error</div>
+        }
 
-        <select class="form-select" @bind="model.EquipmentType">
-            <option value="">Type of Equipment</option>
-            <option>Laptop</option>
-            <option>Monitor</option>
-            <option>Keyboard</option>
-            <option>Mouse</option>
-            <option>Dock</option>
-            <option>Headset</option>
-        </select>
+        <EditForm Model="model" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-        <textarea class="form-textarea" placeholder="Reason for request" @bind="model.Reason"></textarea>
+            <input class="form-input" placeholder="Name" @bind="model.RequesterName" />
+            <input class="form-input" placeholder="Email" @bind="model.Email" />
+            <input class="form-input" placeholder="Your Department" @bind="model.Department" />
+            <input class="form-input" placeholder="Manager's Email" @bind="model.ManagerEmail" />
 
-        <div class="submit-wrap">
-            <button class="submit-btn" @onclick="HandleSubmit">Submit</button>
-            <button class="cancel-btn" @onclick="Cancel">Cancel</button>
-        </div>
+            <select class="form-select" @bind="model.EquipmentType">
+                <option value="">Type of Equipment</option>
+                <option>Laptop</option>
+                <option>Monitor</option>
+                <option>Keyboard</option>
+                <option>Mouse</option>
+                <option>Dock</option>
+                <option>Headset</option>
+            </select>
+
+            <input class="form-input" placeholder="Equipment Model" @bind="model.EquipmentModel" />
+            <input class="form-input" placeholder="Equipment Serial Number" @bind="model.EquipmentSerial" />
+
+            <textarea class="form-textarea" placeholder="Reason for request" @bind="model.Reason"></textarea>
+
+            <div class="submit-wrap">
+                <button type="submit" class="submit-btn">Submit</button>
+                <button type="button" class="cancel-btn" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
     </div>
 </div>
-
-@code {
-    private EquipmentRequest model = new();
-    private string? returnUrl;
-
-    protected override void OnInitialized()
-    {
-        var uri = Nav.ToAbsoluteUri(Nav.Uri);
-        var q = QueryHelpers.ParseQuery(uri.Query);
-        if (q.TryGetValue("return", out var val) && !string.IsNullOrWhiteSpace(val))
-        {
-            returnUrl = Uri.UnescapeDataString(val!);
-        }
-    }
-
-    private void Cancel()
-    {
-        Nav.NavigateTo(returnUrl ?? "/user");
-    }
-
-    private async Task HandleSubmit()
-    {
-        model.Status = "Pending";
-        model.SubmittedAt = DateTime.UtcNow;
-
-        Db.EquipmentRequests.Add(model);
-        await Db.SaveChangesAsync();
-
-        Nav.NavigateTo(returnUrl ?? "/user?submitted=1");
-    }
-}

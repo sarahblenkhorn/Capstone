@@ -20,6 +20,8 @@ public static class SeedData
                 Department = "Sales",
                 ManagerEmail = "mgr@example.com",
                 EquipmentType = "Laptop",
+                EquipmentModel = "Model",
+                EquipmentSerial = "Serial",
                 Reason = "Old device failing",
                 Status = "Approved",
                 SubmittedAt = DateTime.UtcNow.AddDays(-3)
@@ -36,6 +38,8 @@ public static class SeedData
                 Department = "Ops",
                 ManagerEmail = "mgr@example.com",
                 EquipmentType = "Monitor",
+                EquipmentModel = "Model",
+                EquipmentSerial = "Serial",
                 Reason = "Dual monitor setup",
                 Status = "Pending",
                 SubmittedAt = DateTime.UtcNow.AddDays(-1)
@@ -52,6 +56,8 @@ public static class SeedData
                 Department = "Ops",
                 ManagerEmail = "mgr@example.com",
                 EquipmentType = "Monitor",
+                EquipmentModel = "Model",
+                EquipmentSerial = "Serial",
                 Reason = "Dual monitor setup",
                 Status = "Denied",
                 SubmittedAt = DateTime.UtcNow.AddDays(-1)

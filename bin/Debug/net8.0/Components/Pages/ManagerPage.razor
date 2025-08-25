@@ -1,261 +1,154 @@
 ﻿@page "/manager"
 @page "/ManagerPage"
-@using Capstone_Inventory_Project.Models
-@inject NavigationManager Nav
 @inject ApplicationDbContext Db
+@inject NavigationManager Nav
+@inject IJSRuntime JS
 @rendermode InteractiveServer
 
 <style>
-    .user-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f8f9fa;
-    }
-
-    .user-box {
-        width: 100%;
-        max-width: 700px;
-        padding: 2rem;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-        position: relative;
-    }
-
-    .signout-link {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-    }
-
-    .user-header {
-        text-align: center;
-        margin-top: 2rem;
-    }
-
-    .request-button {
-        display: flex;
-        justify-content: center;
-        margin: 1.5rem 0;
-    }
-
-    .request-list {
-        padding-left: 0;
-        margin-left: 0;
-    }
-
-    .request-list li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: .25rem 0;
-    }
-
-    .request-status {
-        min-width: 140px;
-        text-align: right;
-    }
-
-    .status-approved {
-        color: green;
-        font-weight: bold;
-    }
-
-    .status-denied {
-        color: red;
-        font-weight: bold;
-    }
-
-    .status-pending {
-        color: orange;
-        font-weight: bold;
-    }
-
-    .status-neutral {
-        color: gray;
-        font-weight: bold;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: .5rem;
-    }
+    .user-container { display:flex; justify-content:center; align-items:center; min-height:100vh; background:#f8f9fa; }
+    .user-box { width:100%; max-width:700px; padding:2rem; border:1px solid #ccc; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.1); background:#fff; position:relative; }
+    .signout-link { position:absolute; top:1rem; right:1rem; }
+    .user-header { text-align:center; margin-top:2rem; }
+    .request-list { list-style:none; padding-left:0; }
+    .request-list li { display:flex; justify-content:space-between; align-items:center; padding:.35rem 0; gap:.75rem; }
+    .status-approved { color:green; font-weight:700; }
+    .status-denied { color:red; font-weight:700; }
+    .status-pending { color:orange; font-weight:700; }
+    .status-neutral { color:gray; font-weight:700; }
+    .req-meta { font-size:.9rem; color:#6c757d; }
 </style>
 
 <div class="user-container">
-    <div class="user-box">
-        <a href="/login" class="signout-link">Sign out</a>
+ <div class="user-box">
+   <a class="signout-link" href="/login">Sign out</a>
 
-        <div class="user-header">
-            <h2 class="form-title">Hello, @DisplayName</h2>
-        </div>
+   <div class="user-header">
+     <h2 class="form-title">Hello, Manager</h2>
+            <button class="btn btn-primary mt-2" @onclick="GoToNew">Submit a New Request</button>
+   </div>
 
-        <div class="request-button">
-            <button class="btn btn-primary" @onclick="GoToNew">
-                Submit a New Request
-            </button>
-        </div>
+   <h4 class="mt-4">Approval Requests</h4>
+   <hr />
 
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h2 class="form-title mb-0">Approval Requests</h2>
-        </div>
-        <hr />
+   @if (loading)         { <p>Loading…</p> }
+   else if (loadError != null) { <div class="alert alert-danger">@loadError</div> }
+   else
+   {
+     @if (approvals.Count == 0)
+     {
+        <p>No approval requests right now.</p>
+     }
+     else
+     {
+       <ul class="request-list">
+         @foreach (var r in approvals)
+         {
+           <li>
+             <div>
+               <a href="@($"/request/{r.Id}?from=manager")"><strong>@r.RequesterName</strong> • @r.Email</a>
+               <div class="req-meta">
+                 @r.SubmittedAt.ToLocalTime().ToString("g") · @r.Department · @r.EquipmentType
+                 @if (!string.IsNullOrWhiteSpace(r.Reason)) { <text> · @r.Reason</text> }
+               </div>
+             </div>
 
-        @if (!string.IsNullOrEmpty(loadError))
-        {
-            <div class="alert alert-danger">@loadError</div>
-        }
-        else if (pending is null)
-        {
-            <p class="text-center">Loading…</p>
-        }
-        else if (pending.Count == 0)
-        {
-            <p class="text-center">No pending requests for your approval.</p>
-        }
-        else
-        {
-            <ul class="list-unstyled mt-3 request-list">
-                @foreach (var r in pending)
-                {
-                    <li class="d-flex align-items-center justify-content-between mb-2">
-                        <div>
-                            <div><strong>@r.RequesterName</strong> · @r.Email</div>
-                            <div class="small text-muted">
-                                @r.SubmittedAt.ToLocalTime().ToString("g")
-                                @if (!string.IsNullOrWhiteSpace(r.Department))
-                                {
-                                    <text> · @r.Department</text>
-                                    ;
-                                }
-                                @if (!string.IsNullOrWhiteSpace(r.EquipmentType))
-                                {
-                                    <text> · @r.EquipmentType</text>
-                                    ;
-                                }
-                            </div>
-                            @if (!string.IsNullOrWhiteSpace(r.Reason))
-                            {
-                                <div class="small">@r.Reason</div>
-                            }
-                        </div>
+             <div class="d-flex gap-2">
+               <button class="btn btn-outline-success btn-sm" @onclick="() => Approve(r.Id)">Approve</button>
+               <button class="btn btn-outline-danger btn-sm"  @onclick="() => Deny(r.Id)">Deny</button>
+             </div>
+           </li>
+         }
+       </ul>
+     }
 
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-success"
-                                    disabled="@busy"
-                                    @onclick="@(() => ApproveAsync(r.Id))">
-                                Approve
-                            </button>
-                            <button class="btn btn-sm btn-danger"
-                                    disabled="@busy"
-                                    @onclick="@(() => DenyAsync(r.Id))">
-                                Deny
-                            </button>
-                        </div>
-                    </li>
-                }
-            </ul>
-        }
+     <h4 class="mt-4">My Requests</h4>
+     <hr />
 
-        <!-- My Requests -->
-        <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
-            <h2 class="form-title mb-0">My Requests</h2>
-        </div>
-        <hr />
-
-        @if (myRequests is null)
-        {
-            <p class="text-center">Loading…</p>
-        }
-        else if (myRequests.Count == 0)
-        {
-            <p class="text-center">No requests yet. <a href="/request/new">Create one</a>.</p>
-        }
-        else
-        {
-            <ul class="list-unstyled mt-3 request-list">
-                @foreach (var r in myRequests)
-                {
-                    <li class="d-flex align-items-center justify-content-between mb-2">
-                        <a href="@($"/request/{r.Id}")">Request @r.Id</a>
-                        <span class="@StatusClass(r.Status) request-status">@r.Status</span>
-                    </li>
-                }
-            </ul>
-        }
-    </div>
+     @if (mine.Count == 0)
+     {
+        <p>You haven’t submitted any requests.</p>
+     }
+     else
+     {
+       <ul class="request-list">
+         @foreach (var r in mine)
+         {
+           <li>
+             <div>
+               <a href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
+               <div class="req-meta">
+                 @r.SubmittedAt.ToLocalTime().ToString("g") · @r.EquipmentType
+               </div>
+             </div>
+             <span class="@StatusClass(r.Status)">@r.Status</span>
+           </li>
+         }
+       </ul>
+     }
+   }
+ </div>
 </div>
 
 @code {
-    private string DisplayName = "Manager";
-    private List<EquipmentRequest>? pending;
-    private List<EquipmentRequest>? myRequests;
-    private string? loadError;
-    private bool busy;
+  private string currentUserEmail = "manager@test.com";
 
-    protected override async Task OnInitializedAsync()
+  private bool loading = true;
+  private string? loadError;
+  private List<EquipmentRequest> approvals = new();
+  private List<EquipmentRequest> mine = new();
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
     {
-        try
-        {
-            // TODO: when auth is wired, set this to the signed-in manager's email
-            // and filter pending by r.ManagerEmail == myEmail.
-            string myEmail = "";
+      loading = true;
 
-            var query = Db.EquipmentRequests.Where(r => r.Status == "Pending");
-            if (!string.IsNullOrWhiteSpace(myEmail))
-                query = query.Where(r => r.ManagerEmail == myEmail);
+      approvals = await Db.EquipmentRequests
+        .Where(r => r.ManagerEmail == currentUserEmail &&
+                    (r.Status == "Pending" || r.Status == "Needs More Info"))
+        .OrderBy(r => r.SubmittedAt)
+        .ToListAsync();
 
-            pending = await query.OrderBy(r => r.SubmittedAt).ToListAsync();
-
-            myRequests = await Db.EquipmentRequests
-                                 .Where(r => !r.IsClosed)
-                                 .OrderByDescending(r => r.SubmittedAt)
-                                 .ToListAsync();
-        }
-        catch (Exception ex)
-        {
-            loadError = ex.Message;
-        }
+      mine = await Db.EquipmentRequests
+        .Where(r => r.Email == currentUserEmail)
+        .OrderByDescending(r => r.SubmittedAt)
+        .ToListAsync();
     }
+    catch (Exception ex) { loadError = ex.Message; }
+    finally { loading = false; }
+  }
 
-    private void GoToNew()
-    {
-        var back = Uri.EscapeDataString("/manager");
-        Nav.NavigateTo($"/request/new?return={back}");
-    }
+  private string StatusClass(string status) => status switch
+  {
+    "Approved" => "status-approved",
+    "Denied" => "status-denied",
+    "Needs More Info" or "Pending" => "status-pending",
+    "Returned" or "Cancelled" => "status-neutral",
+    _ => "status-neutral"
+  };
 
-    private Task ApproveAsync(int id) => UpdateStatusAsync(id, "Approved");
-    private Task DenyAsync(int id) => UpdateStatusAsync(id, "Denied");
+  private async Task Approve(int id)
+  {
+    var r = await Db.EquipmentRequests.FindAsync(id);
+    if (r is null) return;
+    r.Status = "Approved";
+    await Db.SaveChangesAsync();
+    approvals.RemoveAll(x => x.Id == id);
+    StateHasChanged();
+  }
 
-    private async Task UpdateStatusAsync(int id, string newStatus)
-    {
-        if (busy) return;
-        busy = true;
-        try
-        {
-            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == id);
-            if (req is null) return;
+  private async Task Deny(int id)
+  {
+    var r = await Db.EquipmentRequests.FindAsync(id);
+    if (r is null) return;
+    r.Status = "Denied";
+    r.IsClosed = true;
+    await Db.SaveChangesAsync();
+    approvals.RemoveAll(x => x.Id == id);
+    StateHasChanged();
+  }
 
-            req.Status = newStatus;
-            await Db.SaveChangesAsync();
+    private void GoToNew() => Nav.NavigateTo("/request/new?return=/manager");
 
-            await OnInitializedAsync();
-            StateHasChanged();
-        }
-        finally
-        {
-            busy = false;
-        }
-    }
-
-    private static string StatusClass(string status) => status switch
-    {
-        "Approved" => "status-approved",
-        "Denied" => "status-denied",
-        "Needs More Info" or "Pending" => "status-pending",
-        _ => "status-neutral"
-    };
 }

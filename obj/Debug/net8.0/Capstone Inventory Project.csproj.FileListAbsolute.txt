@@ -3,9 +3,11 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Layout\MainLayout.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Layout\NavMenu.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\AdminPage.razor
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\Inventory.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\Login.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\ManagerPage.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\RedirectToLogin.razor
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\RequestDetail.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\RequestNew.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\UserPage.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Routes.razor
@@ -150,6 +152,7 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.AssemblyInfo.cs
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.csproj.CoreCompileInputs.cache
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone_Inventory_Project.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.sourcelink.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -168,4 +171,4 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone_Inventory_Project.pdb
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.genruntimeconfig.cache
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\ref\Capstone_Inventory_Project.dll
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.sourcelink.json
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\Reports.razor

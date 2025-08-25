@@ -1,0 +1,217 @@
+﻿@page "/inventory"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Capstone_Inventory_Project.Models
+@inject ApplicationDbContext Db
+@inject IJSRuntime JS
+@inject AppState State
+@inject NavigationManager Nav
+
+<style>
+    .wrap {
+        max-width: 980px;
+        margin: 2rem auto;
+        background: #fff;
+        padding: 1.5rem 2rem;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,.06);
+    }
+
+    h2 {
+        margin: 0 0 .75rem 0;
+    }
+
+    hr {
+        margin: .5rem 0 1rem 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: .6rem .5rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .muted {
+        color: #6c757d;
+    }
+
+    .btn {
+        padding: .35rem .6rem;
+        border: 1px solid #999;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+    }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+    .btn-primary {
+        border-color: #0d6efd;
+    }
+
+    .btn-danger {
+        border-color: #dc3545;
+    }
+</style>
+
+<div class="wrap">
+    <h2>Current Inventory</h2>
+    <hr />
+
+    @if (loading)
+    {
+        <p>Loading…</p>
+    }
+    else if (!string.IsNullOrEmpty(error))
+    {
+
+        <div class="alert alert-danger">@error</div>
+    }
+    else
+    {
+        if (Current.Count == 0)
+        {
+            <p class="muted">No inventory items yet.</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Model</th>
+                        <th>Serial #</th>
+                        <th>Added/Updated</th>
+                        <th class="right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Current)
+                    {
+                        <tr>
+                            <td>@i.EquipmentType</td>
+                            <td>@(string.IsNullOrWhiteSpace(i.EquipmentModel) ? "-" : i.EquipmentModel)</td>
+                            <td>@(string.IsNullOrWhiteSpace(i.EquipmentSerial) ? "-" : i.EquipmentSerial)</td>
+                            <td>@(i.AssignedAt ?? i.ReturnDate ?? DateTime.UtcNow).ToLocalTime().ToString("g")</td>
+                            <td class="right">
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <h2 style="margin-top:2rem;">Returned Inventory</h2>
+        <hr />
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Equipment</th>
+                    <th>Model</th>
+                    <th>Serial #</th>
+                    <th>Returned</th>
+                    <th class="right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Returned)
+                {
+                    <tr>
+                        <td>@r.EquipmentType</td>
+                        <td>@(string.IsNullOrWhiteSpace(r.EquipmentModel) ? "-" : r.EquipmentModel)</td>
+                        <td>@(string.IsNullOrWhiteSpace(r.EquipmentSerial) ? "-" : r.EquipmentSerial)</td>
+                        <td>@r.ReturnDate?.ToLocalTime().ToString("g")</td>
+                        <td class="right">
+                            <button class="btn btn-primary" style="margin-right:.5rem"
+                                    @onclick="() => MoveToInventory(r.Id)">
+                                Move to Inventory
+                            </button>
+                            <button class="btn btn-danger"
+                                    @onclick="() => Recycle(r.Id)">
+                                Recycle
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private List<InventoryItem> Current = new();
+    private List<InventoryItem> Returned = new();
+    private bool loading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        try
+        {
+            loading = true; error = null;
+
+            Current = await Db.InventoryItems
+              .Where(x => x.Status == InventoryStatus.Available)
+              .OrderBy(x => x.EquipmentType)
+              .ToListAsync();
+
+            Returned = await Db.InventoryItems
+              .Where(x => x.Status == InventoryStatus.Returned)
+              .OrderByDescending(x => x.ReturnDate)
+              .ToListAsync();
+        }
+        catch (Exception ex) { error = ex.Message; }
+        finally { loading = false; }
+    }
+
+    private async Task MoveToInventory(int id)
+    {
+        var ok = await JS.InvokeAsync<bool>("confirm", "Move this item back to Current Inventory?");
+        if (!ok) return;
+
+        var item = await Db.InventoryItems.FindAsync(id);
+        if (item is null) return;
+
+        item.Status = InventoryStatus.Available;
+        item.ReturnDate = null;
+        item.AssignedTo = null;
+        item.AssignedAt = null;
+        item.AssignedRequestId = null;
+
+        await Db.SaveChangesAsync();
+        await LoadAsync();
+    }
+
+    private async Task Recycle(int id)
+    {
+        var ok = await JS.InvokeAsync<bool>("confirm", "Recycle this item? It will be removed from Returned.");
+        if (!ok) return;
+
+        var item = await Db.InventoryItems.FindAsync(id);
+        if (item is null) return;
+
+        item.Status = InventoryStatus.Recycled;
+        item.ReturnDate ??= DateTime.UtcNow;
+
+        await Db.SaveChangesAsync();
+        await LoadAsync();
+    }
+}

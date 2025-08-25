@@ -3,6 +3,7 @@ using System;
 using Capstone_Inventory_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CapstoneInventoryProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250825153956_InventoryTweaks")]
+    partial class InventoryTweaks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -31,25 +34,22 @@ namespace CapstoneInventoryProject.Migrations
 
                     b.Property<string>("Department")
                         .IsRequired()
-                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EquipmentModel")
-                        .HasMaxLength(120)
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EquipmentSerial")
-                        .HasMaxLength(120)
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EquipmentType")
                         .IsRequired()
-                        .HasMaxLength(40)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsClosed")
@@ -57,21 +57,18 @@ namespace CapstoneInventoryProject.Migrations
 
                     b.Property<string>("ManagerEmail")
                         .IsRequired()
-                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Reason")
-                        .HasMaxLength(400)
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RequesterName")
                         .IsRequired()
-                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(40)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("SubmittedAt")
