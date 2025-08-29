@@ -3,448 +3,1184 @@
 @using Microsoft.EntityFrameworkCore
 @using Capstone_Inventory_Project.Models
 @inject ApplicationDbContext Db
-@inject NavigationManager Nav
 @inject IJSRuntime JS
+@inject NavigationManager Nav
 @rendermode InteractiveServer
 
 <style>
-  .scroll-box{ overflow-y:auto; border:1px solid #e5e7eb; border-radius:6px; max-height:none; -webkit-overflow-scrolling:touch; }
-  .scroll-tight{ max-height:260px; } 
-  .scroll-box thead th{ position:sticky; top:0; background:#fff; z-index:1; }
-
-  .user-container{ display:flex; justify-content:center; align-items:center; background:#f8f9fa; min-height:100vh; }
-  .user-box{ width:100%; max-width:1000px; padding:2.25rem; border:1px solid #ccc; border-radius:10px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,.1); position:relative; }
-  .signout-link{ position:absolute; top:1rem; right:1rem; }
-
-  .admin-toolbar {
+    .signout-link {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    .tabbar {
         display: flex;
-        justify-content: flex-end;
-        margin: .25rem 0 1rem;
+        flex-wrap: wrap;
+        gap: .5rem;
+        margin: 1rem 0 1.25rem
     }
 
-  .user-header{ text-align:center; margin-top:1rem; }
-  .section-title{ font-size:1.6rem; font-weight:700; margin:1.75rem 0 .5rem; }
-  .section-title + hr{ margin:.4rem 0 1.1rem; }
-  .small-muted{ font-size:.9rem; color:#6b7280; margin-top:2px; }
-  .req-meta{ display:grid; gap:2px; }
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
 
-  .table{ width:100%; border-collapse:separate; border-spacing:0 8px; }
-  .table thead th{ padding:12px 16px; font-weight:700; border-bottom:2px solid #e5e7eb; }
-  .table tbody tr{ background:#fff; box-shadow:0 1px 0 rgba(0,0,0,.03); }
-  .table td, .table th{ vertical-align:middle; }
-  .table tbody td{ padding:14px 16px; }
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .35rem .75rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        border: 1px solid #e5e7eb;
+        background: #f3f4f6;
+        color: #374151;
+        cursor: pointer;
+        user-select: none;
+        transition: all .12s
+    }
 
-  .text-end{ text-align:right; }
-  .btn + .btn{ margin-left:8px; }
-  .block{ margin-bottom:28px; }
+        .pill:hover {
+            filter: brightness(.97)
+        }
+
+        .pill .badge {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 9999px;
+            padding: .05rem .45rem;
+            font-weight: 700;
+            font-size: .8rem;
+            line-height: 1.2
+        }
+
+    .pill-req {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8
+    }
+
+    .pill-avl {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46
+    }
+
+    .pill-asg {
+        background: #eef2ff;
+        border-color: #c7d2fe;
+        color: #3730a3
+    }
+
+    .pill-ret {
+        background: #fffbeb;
+        border-color: #fde68a;
+        color: #92400e
+    }
+
+    .pill-rec {
+        background: #fdf2f8;
+        border-color: #fbcfe8;
+        color: #9d174d
+    }
+
+    .pill-cls {
+        background: #f3f4f6;
+        border-color: #e5e7eb;
+        color: #374151
+    }
+
+    .pill.active {
+        box-shadow: 0 1px 0 rgba(0,0,0,.02),0 0 0 2px rgba(0,0,0,.03) inset;
+        filter: none;
+        opacity: 1
+    }
+
+    .pill-rpr {
+        background: #f5f3ff;
+        border-color: #ddd6fe;
+        color: #5b21b6
+    }
+
+    .scroll-box {
+        overflow-y: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        max-height: none;
+        -webkit-overflow-scrolling: touch
+    }
+
+    .table.inv-table .col-eq {
+        width: 22%
+    }
+
+    .table.inv-table .col-model {
+        width: 26%
+    }
+
+    .table.inv-table .col-serial {
+        width: 18%
+    }
+
+    .table.inv-table .col-status {
+        width: 14%
+    }
+
+    .table.inv-table .col-actions {
+        width: 20%
+    }
+
+    .btn-stack {
+        display: flex;
+        gap: .5rem;
+        justify-content: flex-end
+    }
+
+    .scroll-tight {
+        max-height: 420px
+    }
+
+    .scroll-box thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 1
+    }
+
+    .user-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f8f9fa;
+        min-height: 100vh
+    }
+
+    .user-box {
+        width: 100%;
+        max-width: 1100px;
+        padding: 2.25rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,.1);
+        position: relative
+    }
+
+    .signout-link {
+        position: absolute;
+        top: 1rem;
+        right: 1rem
+    }
+
+    .select-wide {
+        min-width: 180px;
+    }
+
+    .card {
+        border-radius: .6rem;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+    }
+
+    .small-muted {
+        font-size: .9rem;
+        color: #6b7280;
+        margin-top: 2px
+    }
+
+    .req-meta {
+        display: grid;
+        gap: 2px
+    }
+
+    .table thead th.th-right {
+        text-align: right
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px
+    }
+
+        .table thead th {
+            padding: 12px 16px;
+            font-weight: 700;
+            border-bottom: 2px solid #e5e7eb;
+            text-align: left
+        }
+
+        .table tbody tr {
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,.03)
+        }
+
+        .table td, .table th {
+            vertical-align: middle
+        }
+
+        .table tbody td {
+            padding: 14px 16px
+        }
+
+    .text-end {
+        text-align: right
+    }
+
+    .th-right {
+        text-align: right
+    }
+
+    .btn + .btn {
+        margin-left: 8px
+    }
+
+    .actions-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: .6rem
+    }
+
+    .actions-row {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem
+    }
+
+        .actions-row .form-select, .actions-row .btn {
+            height: 34px;
+            padding: .25rem .6rem;
+            line-height: 1.2
+        }
+
+    .request-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem
+    }
+
+        .request-actions .form-select, .request-actions .btn {
+            height: 34px;
+            padding: .25rem .6rem;
+            line-height: 1.2
+        }
+
+    .block {
+        margin-bottom: 28px
+    }
+
+    .approval-row .btn {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.2
+    }
+
+    .btn {
+        appearance: none;
+        background: #fff;
+        color: #111827;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: .4rem .75rem;
+        font-weight: 600;
+        line-height: 1.2;
+        box-shadow: 0 1px 0 rgba(0,0,0,.02);
+        transition: background .15s,border-color .15s,box-shadow .15s
+    }
+
+        .btn:hover {
+            background: #f9fafb;
+            border-color: #cbd5e1
+        }
+
+        .btn:active {
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.06)
+        }
+
+        .btn[disabled] {
+            opacity: .55;
+            pointer-events: none
+        }
+
+    .btn-sm {
+        padding: .3rem .6rem;
+        font-size: .9rem;
+        border-radius: 8px
+    }
+
+    .btn-primary, .btn-secondary, .btn-outline-dark {
+        color: #374151;
+        border-color: #d1d5db;
+        background: #fff
+    }
+
+        .btn-primary:hover, .btn-secondary:hover, .btn-outline-dark:hover {
+            background: #f9fafb
+        }
+
+    .btn-outline-success {
+        color: #166534;
+        border-color: #86efac;
+        background: #fff
+    }
+
+        .btn-outline-success:hover {
+            background: #ecfdf5
+        }
+
+    .btn-outline-danger {
+        color: #991b1b;
+        border-color: #fecaca;
+        background: #fff
+    }
+
+        .btn-outline-danger:hover {
+            background: #fef2f2
+        }
+
+    .btn-outline-warning {
+        color: #92400e;
+        border-color: #fde68a;
+        background: #fff
+    }
+
+        .btn-outline-warning:hover {
+            background: #fffbeb
+        }
+
+    .btn-outline-primary {
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+        background: #fff
+    }
+
+        .btn-outline-primary:hover {
+            background: #eff6ff
+        }
+
+    .btnbar {
+        display: flex;
+        gap: .5rem;
+        margin: 10px auto 6px;
+        justify-content: center
+    }
+
+    .btn {
+        padding: .35rem .65rem;
+        border: 1px solid #bbb;
+        background: #f7f7f7;
+        border-radius: 6px
+    }
+
+    .btn-warning {
+        border-color: #e0a800
+    }
+
+    .btn-primary {
+        border-color: #0d6efd
+    }
+
+    .btn-outline {
+        background: #fff
+    }
+
+    #availFilter, .form-select.select-wide {
+        width: 260px !important;
+        min-width: 260px !important;
+        flex: 0 0 260px !important
+    }
+
+    .searchbar {
+        display: flex;
+        gap: .6rem;
+        align-items: center;
+        margin: .5rem 0 1rem
+    }
+
+        .searchbar .search-control {
+            width: 420px;
+            max-width: 100%;
+            height: 42px;
+            padding: .55rem .8rem;
+            font-size: .98rem;
+            border-radius: 10px
+        }
+
+        .searchbar .btn {
+            height: 42px;
+            padding: .4rem .9rem;
+            font-weight: 600
+        }
+
+    .clear-btn[disabled] {
+        opacity: .45;
+        pointer-events: none
+    }
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        margin: .25rem 0 .75rem
+    }
+
+    .report-modal-backdrop {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,.35);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 6vh;
+        z-index: 999
+    }
+
+    .report-modal {
+        background: #fff;
+        width: min(1000px,95vw);
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.15);
+        padding: 16px
+    }
+
+    .report-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: .25rem 0 1rem
+    }
+
+    .report-head .left,
+.report-head .right{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+}
+
+
+    .report-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px
+    }
+
+        .report-table thead th {
+            padding: 10px 14px;
+            border-bottom: 2px solid #e5e7eb;
+            text-align: left;
+            font-weight: 700
+        }
+
+        .report-table tbody td {
+            padding: 12px 14px;
+            background: #fff
+        }
+
+    .inv-card {
+        border-radius: .75rem;
+        overflow: hidden;
+    }
+
+        .inv-card .card-header {
+            background: #f8f9fb;
+            border-bottom: 1px solid #e9ecef;
+            padding: .6rem .9rem;
+        }
+
+        .inv-card .card-body {
+            background: #fcfdff;
+            padding: 1rem .9rem 1.1rem;
+        }
+
+        .inv-card .form-label {
+            font-weight: 600;
+            margin-bottom: .35rem;
+        }
+
+        .inv-card .form-control-sm,
+        .inv-card .form-select-sm {
+            margin-bottom: .5rem;
+            padding-top: .4rem;
+            padding-bottom: .4rem;
+        }
+
+    .section-title {
+        font-weight: 700;
+    }
+
 </style>
 
 <div class="user-container">
-  <div class="user-box">
-    <a class="signout-link" href="/login">Sign out</a>
-    <a class="signout-link" style="right:7.5rem" href="/reports">Reports</a>
+    <div class="user-box">
+        <div class="topbar">
+            <div class="toolbar">
+                <button class="btn btn-sm btn-outline-primary" @onclick="() => showReport = true">Reports</button>
+            </div>
 
-    <div class="user-header">
-      <h2 class="form-title">Hello, Admin</h2>
-    </div>
-
-    <!-- Current Requests -->
-    <div class="block">
-      <h2 class="section-title">Current Requests</h2>
-      <hr />
-      @if (_requests is null)
-      {
-        <p>Loading…</p>
-      }
-      else if (_requests.Count == 0)
-      {
-        <p>No requests yet.</p>
-      }
-      else
-      {
-        <div class="@( (_requests?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null )">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Submitted</th>
-                <th>Requester</th>
-                <th>Equipment</th>
-                <th>Status</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var r in _requests)
-              {
-                var key = r.EquipmentType ?? string.Empty;
-                _availableCounts.TryGetValue(key, out var availableCount);
-                var canAssign = r.Status == "Approved" && availableCount > 0;
-
-                <tr>
-                  <td>@r.SubmittedAt.ToLocalTime().ToString("g")</td>
-                  <td>
-                    <div class="req-meta">
-                      <strong>@r.RequesterName</strong>
-                      <div class="small-muted">@r.Email</div>
-                    </div>
-                  </td>
-                  <td>
-                    <div>@r.EquipmentType</div>
-                    @if (!string.IsNullOrWhiteSpace(r.Reason))
-                    {
-                      <div class="small-muted">@r.Reason</div>
-                    }
-                  </td>
-                  <td>
-                    @switch (r.Status)
-                    {
-                      case "Approved":
-                        <span style="color:#0b7a28;font-weight:700">Approved</span>
-                        break;
-                      case "Denied":
-                        <span style="color:#9b1c1c;font-weight:700">Denied</span>
-                        break;
-                      case "Pending":
-                        <span style="color:#8a6d00;font-weight:700">Pending</span>
-                        break;
-                      case "Fulfilled":
-                        <span style="color:#2563eb;font-weight:700">Fulfilled</span>
-                        break;
-                      default:
-                        <span>@r.Status</span>
-                        break;
-                    }
-                  </td>
-                                    <td class="text-end">
-                                        @if (canAssign)
-                                        {
-                                            <button class="btn btn-sm btn-dark mb-1" disabled="@_busy"
-                                                    @onclick="@(() => AssignFirstAvailableAsync(r.Id))">
-                                                Quick Assign (@availableCount)
-                                            </button>
-
-                                            <div class="d-inline-flex align-items-center" style="gap:.25rem; max-width: 420px;">
-                                                <select class="form-select form-select-sm"
-                                                        style="min-width: 220px;"
-                                                        @onchange="e => OnSelectItem(r.Id, e.Value?.ToString())">
-                                                    <option value="">Choose specific item…</option>
-                                                    @foreach (var it in AvailFor(r.EquipmentType))
-                                                    {
-                                                        <option value="@it.Id">
-                                                            @($"{it.EquipmentType} · {(it.EquipmentModel ?? "-")} · {(it.EquipmentSerial ?? "-")}")
-                                                        </option>
-                                                    }
-                                                </select>
-
-                                                <button class="btn btn-sm btn-outline-dark"
-                                                        disabled="@((SelectedIdOrZero(r.Id) == 0) || _busy)"
-                                                        @onclick="@(() => AssignSpecificAsync(r.Id, SelectedIdOrZero(r.Id)))">
-                                                    Assign
-                                                </button>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <button class="btn btn-sm btn-outline-secondary mb-1" disabled>
-                                                Assign Inventory
-                                            </button>
-                                        }
-
-                                        <button class="btn btn-sm btn-outline-success mb-1" disabled="@_busy"
-                                                @onclick="@(() => MarkRequestReturnedAsync(r.Id))">
-                                            Returned
-                                        </button>
-
-                                        <button class="btn btn-sm btn-outline-danger" disabled="@_busy"
-                                                @onclick="@(() => CloseRequestAsync(r.Id))">
-                                            Close
-                                        </button>
-                                    </td>
-
-                </tr>
-              }
-            </tbody>
-          </table>
+            <button class="btn btn-sm btn-outline-danger"
+                    @onclick="SignOut">
+                Sign Out
+            </button>
         </div>
-      }
-    </div>
 
-    <!-- Current Inventory -->
-    <div class="block">
-      <h2 class="section-title">Current Inventory</h2>
-      <hr />
-      @if (_currentInv is null)
-      {
-        <p>Loading…</p>
-      }
-      else if (_currentInv.Count == 0)
-      {
-        <p>No inventory items yet.</p>
-      }
-      else
-      {
-        <div class="@( (_currentInv?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null )">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Equipment</th>
-                <th>Model</th>
-                <th>Serial #</th>
-                <th>Status</th>
-                <th>Assigned To</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-                        <tbody>
-                            @foreach (var i in _currentInv)
-                            {
-                                <tr>
-                                    <td>@i.EquipmentType</td>
-                                    <td>@(string.IsNullOrWhiteSpace(i.EquipmentModel) ? "-" : i.EquipmentModel)</td>
-                                    <td>@(string.IsNullOrWhiteSpace(i.EquipmentSerial) ? "-" : i.EquipmentSerial)</td>
-                                    <td>@i.Status</td>
-                                    <td>@(string.IsNullOrWhiteSpace(i.AssignedTo) ? "-" : i.AssignedTo)</td>
+        <h2 class="form-title mb-3" style="text-align:center">Hello, Admin</h2>
 
-                                    <td class="text-end">
-
-                                        @if (i.Status == "Available")
-                                        {
-                                            <button class="btn btn-outline-danger btn-sm"
-                                                    @onclick="() => Recycle(i.Id)">
-                                                Recycle
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <span class="small-muted">—</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-          </table>
+        <div class="searchbar">
+            <input class="form-control search-control"
+                   placeholder="Search (name, email, type, model, serial…)"
+                   value="@search"
+                   @oninput="e => search = e?.Value?.ToString() ?? string.Empty" />
+            <button type="button"
+                    class="btn btn-secondary clear-btn"
+                    disabled="@string.IsNullOrWhiteSpace(search)"
+                    @onclick="ClearSearch">
+                Clear
+            </button>
         </div>
-      }
-    </div>
 
-    <!-- Returned Inventory -->
-    <div class="block">
-      <h2 class="section-title">Returned Inventory</h2>
-      <hr />
-      @if (_returnedInv is null)
-      {
-        <p>Loading…</p>
-      }
-      else if (_returnedInv.Count == 0)
-      {
-        <p>No returned items.</p>
-      }
-      else
-      {
-        <div class="@( (_returnedInv?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null )">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Equipment</th>
-                <th>Model</th>
-                <th>Serial #</th>
-                <th>Returned</th>
-                <th style="width:240px;" class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var r in _returnedInv)
-              {
-                <tr>
-                  <td>@r.EquipmentType</td>
-                  <td>@(string.IsNullOrWhiteSpace(r.EquipmentModel) ? "-" : r.EquipmentModel)</td>
-                  <td>@(string.IsNullOrWhiteSpace(r.EquipmentSerial) ? "-" : r.EquipmentSerial)</td>
-                  <td>@r.ReturnDate?.ToLocalTime().ToString("g")</td>
-                  <td class="text-end">
-                    <button class="btn btn-outline-primary btn-sm"
-                            @onclick="() => MoveToInventory(r.Id)">
-                      Move to Inventory
-                    </button>
-                    <button class="btn btn-outline-danger btn-sm"
-                            @onclick="() => Recycle(r.Id)">
-                      Recycle
-                    </button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
+
+        <div class="tabbar">
+            <button class="pill pill-req @(Tab == AdminTab.Requests ? "active" : null)" @onclick="() => SetTab(AdminTab.Requests)">Current Requests <span class="badge">@CountReq</span></button>
+            <button class="pill pill-avl @(Tab == AdminTab.Available ? "active" : null)" @onclick="() => SetTab(AdminTab.Available)">Available Inventory <span class="badge">@CountAvail</span></button>
+            <button class="pill pill-asg @(Tab == AdminTab.Assigned ? "active" : null)" @onclick="() => SetTab(AdminTab.Assigned)">Assigned Inventory <span class="badge">@CountAssigned</span></button>
+            <button class="pill pill-ret @(Tab == AdminTab.Returned ? "active" : null)" @onclick="() => SetTab(AdminTab.Returned)">Returned <span class="badge">@CountReturned</span></button>
+            <button class="pill pill-rpr @(Tab == AdminTab.Repair ? "active" : null)" @onclick="() => SetTab(AdminTab.Repair)">Repair <span class="badge">@CountRepair</span></button>
+            <button class="pill pill-rec @(Tab == AdminTab.Recycled ? "active" : null)" @onclick="() => SetTab(AdminTab.Recycled)">Recycled <span class="badge">@CountRecycled</span></button>
+            <button class="pill pill-cls @(Tab == AdminTab.Closed ? "active" : null)" @onclick="() => SetTab(AdminTab.Closed)">Closed Requests <span class="badge">@CountClosed</span></button>
         </div>
-      }
-    </div>
 
-        <!-- Recycled Inventory -->
-        <div class="block">
-            <h2 class="section-title">Recycled Inventory</h2>
-            <hr />
-            @if (_recycledInv is null)
-            {
-                <p>Loading…</p>
-            }
-            else if (_recycledInv.Count == 0)
-            {
-                <p>No recycled items.</p>
-            }
-            else
-            {
-                <div class="@((_recycledInv?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Equipment</th>
-                                <th>Model</th>
-                                <th>Serial #</th>
-                                <th>Recycled</th>
-                                <th class="text-end">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var i in _recycledInv)
-                            {
-                                <tr>
-                                    <td>@i.EquipmentType</td>
-                                    <td>@(string.IsNullOrWhiteSpace(i.EquipmentModel) ? "-" : i.EquipmentModel)</td>
-                                    <td>@(string.IsNullOrWhiteSpace(i.EquipmentSerial) ? "-" : i.EquipmentSerial)</td>
-                                    <td>@i.ReturnDate?.ToLocalTime().ToString("g")</td>
-                                    <td class="text-end">
-
-                                        <button class="btn btn-outline-primary btn-sm"
-                                                @onclick="() => MoveToInventory(i.Id)">
-                                            Restore
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        @if (Tab == AdminTab.Requests)
+        {
+            <div class="block">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="section-title mb-0">Current Requests</h2>
                 </div>
-            }
-        </div>
 
+                @if (_requests is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _requests;
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesRequest).ToList();
 
-    <!-- Closed Requests -->
-    <div class="block">
-      <h2 class="section-title">Closed Requests</h2>
-      <hr />
-      @if (_closed is null)
-      {
-        <p>Loading…</p>
-      }
-      else if (_closed.Count == 0)
-      {
-        <p>No closed requests.</p>
-      }
-      else
-      {
-        <div class="@( (_closed?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null )">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Closed</th>
-                <th>Requester</th>
-                <th>Equipment</th>
-                <th>Status at Close</th>
-                <th>Note</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var r in _closed)
-              {
-                <tr>
-                  <td>@r.ClosedAt?.ToLocalTime().ToString("g")</td>
-                  <td>
-                    <div class="req-meta">
-                      <strong>@r.RequesterName</strong>
-                      <div class="small-muted">@r.Email</div>
+                    if (list.Count == 0)
+                    {
+                        <p>No requests yet.</p>
+                    }
+                    else
+                    {
+                        <div class="@((list?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Submitted</th>
+                                        <th>Requester</th>
+                                        <th>Equipment</th>
+                                        <th>Status</th>
+                                        <th>Admin Approval</th>
+                                        <th class="th-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var r in list)
+                                    {
+                                        var availableCount = CountAvailable(r.EquipmentType);
+                                        var canAssign = r.Status == "Approved" && availableCount > 0;
+                                        var isManagerReq = IsManagerRequest(r);
+                                        <tr>
+                                            <td>@r.SubmittedAt.ToLocalTime().ToString("g")</td>
+                                            <td>
+                                                <div class="req-meta">
+                                                    <strong>@r.RequesterName</strong>
+                                                    <div class="small-muted">@r.Email</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>@r.EquipmentType</div>
+                                                @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                                {
+                                                    <div class="small-muted">@r.Reason</div>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (r.Status == "Approved")
+                                                {
+                                                    <span style="color:#0b7a28;font-weight:700">Approved</span>
+                                                }
+                                                else if (r.Status == "Denied")
+                                                {
+
+                                                    <span style="color:#9b1c1c;font-weight:700">Denied</span>
+                                                }
+                                                else if (r.Status == "Pending")
+                                                {
+
+                                                    <span style="color:#8a6d00;font-weight:700">Pending</span>
+                                                }
+                                                else if (r.Status == "Fulfilled")
+                                                {
+
+                                                    <span style="color:#2563eb;font-weight:700">Fulfilled</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span>@r.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (isManagerReq && r.Status == "Pending")
+                                                {
+                                                    <div class="actions-row approval-row">
+                                                        <button class="btn btn-sm btn-outline-success" disabled="@_busy" @onclick="() => ApproveAsync(r.Id)">Approve</button>
+                                                        <button class="btn btn-sm btn-outline-danger" disabled="@_busy" @onclick="() => DenyAsync(r.Id)">Deny</button>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+
+                                                    <span class="small-muted">—</span>
+                                                }
+                                            </td>
+                                            <td class="text-end">
+                                                <div class="actions-stack">
+                                                    @if (canAssign)
+                                                    {
+                                                        <div class="actions-row">
+                                                            <select class="form-select form-select-sm select-wide" @onchange="e => OnSelectItem(r.Id, e.Value?.ToString())">
+                                                                <option value="">Choose specific item…</option>
+                                                                @foreach (var it in AvailFor(r.EquipmentType))
+                                                                {
+                                                                    <option value="@it.Id">@($"{it.EquipmentType} · {(it.EquipmentModel ?? "-")} · {(it.EquipmentSerial ?? "-")}")</option>
+                                                                }
+                                                            </select>
+                                                            <button class="btn btn-sm btn-outline-dark"
+                                                                    disabled="@((SelectedIdOrZero(r.Id) == 0) || _busy)"
+                                                                    @onclick="@(() => AssignSpecificAsync(r.Id, SelectedIdOrZero(r.Id)))">
+                                                                Assign
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    <div class="actions-row">
+                                                        <button class="btn btn-sm btn-outline-success" disabled="@_busy" @onclick="@(() => MarkRequestReturnedAsync(r.Id))">Returned</button>
+                                                        <button class="btn btn-sm btn-outline-danger" disabled="@_busy" @onclick="@(() => CloseRequestAsync(r.Id))">Close</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (Tab == AdminTab.Available)
+        {
+            <div class="block">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="section-title mb-0">Available Inventory</h2>
+                    <div class="d-flex align-items-center" style="gap:.5rem">
+                        <select id="availFilter" class="form-select form-select-sm" style="flex:0 0 320px;width:320px;min-width:320px" @onchange="OnAvailFilterChange">
+                            <option value="">All items</option>
+                            @foreach (var t in _availableTypes)
+                            {
+                                <option value="@t" selected="@(string.Equals(t, availFilter, StringComparison.OrdinalIgnoreCase))">@t</option>
+                            }
+                        </select>
+                        <button class="btn btn-sm btn-primary" @onclick="ToggleAddInventory">Add Inventory</button>
                     </div>
-                  </td>
-                  <td>@r.EquipmentType</td>
-                  <td>@r.Status</td>
-                  <td>@(string.IsNullOrWhiteSpace(r.CloseNote) ? "-" : r.CloseNote)</td>
-                  <td class="text-end">
-                    <button class="btn btn-sm btn-outline-primary"
-                            @onclick="() => ReopenAsync(r.Id)">
-                      Reopen
-                    </button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
+                </div>
+
+                <hr />
+
+                @if (showAddInv)
+                {
+                    <div class="card inv-card shadow-sm mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Add Inventory</strong>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <EditForm Model="newInv" OnValidSubmit="AddInventoryAsync">
+                                <DataAnnotationsValidator />
+
+                                @if (!string.IsNullOrWhiteSpace(addInvError))
+                                {
+                                    <div class="alert alert-danger py-2 mb-3">@addInvError</div>
+                                }
+
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-4 mb-3">
+                                        <label class="form-label">Equipment Type</label>
+                                        <select class="form-select form-select-sm" @bind="newInv.EquipmentType">
+                                            @foreach (var t in _availableTypes)
+                                            {
+                                                <option value="@t">@t</option>
+                                            }
+                                        </select>
+
+                                        @if (addCustomType)
+                                        {
+                                            <input class="form-control form-control-sm mt-2" placeholder="Enter custom type" @bind="customType" />
+                                        }
+                                    </div>
+
+                                    <div class="col-12 col-md-4 mb-3">
+                                        <label class="form-label">Model</label>
+                                        <input class="form-control form-control-sm" placeholder="e.g., ThinkPad X1" @bind="newInv.EquipmentModel" />
+                                    </div>
+
+                                    <div class="col-12 col-md-4 mb-3">
+                                        <label class="form-label">Serial #</label>
+                                        <input class="form-control form-control-sm" placeholder="e.g., PC0XXXXXX" @bind="newInv.EquipmentSerial" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 d-flex justify-content-end gap-2">
+                                    <button class="btn btn-success btn-sm" type="submit" disabled="@_busy">Save</button>
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="CancelAddInventory">Cancel</button>
+                                </div>
+
+
+                                <ValidationSummary class="mt-2" />
+                            </EditForm>
+                        </div>
+                    </div>
+                }
+
+
+                else if (_availableInv is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _availableInv
+                    .Where(i => i.Status == "Available" && (string.IsNullOrWhiteSpace(availFilter) || string.Equals((i.EquipmentType ?? "").Trim(), availFilter, StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
+
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesInventory).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        <p>No available inventory.</p>
+                    }
+                    else
+                    {
+                        <div class="@(list.Count > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table inv-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-eq">Equipment</th>
+                                        <th class="col-model">Model</th>
+                                        <th class="col-serial">Serial #</th>
+                                        <th class="col-status">Status</th>
+                                        <th class="th-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var i in list)
+                                    {
+                                        <tr>
+                                            <td>@i.EquipmentType</td>
+                                            <td>@(string.IsNullOrWhiteSpace(i.EquipmentModel) ? "-" : i.EquipmentModel)</td>
+                                            <td>@(string.IsNullOrWhiteSpace(i.EquipmentSerial) ? "-" : i.EquipmentSerial)</td>
+                                            <td>@i.Status</td>
+                                            <td class="text-end">
+                                                <div class="btn-stack">
+                                                    <button class="btn btn-outline-warning btn-sm" @onclick="() => MoveToRepair(i.Id)">Repair</button>
+                                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => Recycle(i.Id)">Recycle</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (Tab == AdminTab.Assigned)
+        {
+            <div class="block">
+                <h2 class="section-title">Assigned Inventory</h2>
+                <hr />
+                @if (_assignedInv is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _assignedInv;
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesInventory).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        <p>No assigned items.</p>
+                    }
+                    else
+                    {
+                        <div class="@((list?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table">
+                                <thead><tr><th>Equipment</th><th>Model</th><th>Serial #</th><th>Assigned To</th><th>Assigned</th></tr></thead>
+                                <tbody>
+                                    @foreach (var i in list)
+                                    {
+                                        <tr>
+                                            <td>@i.EquipmentType</td>
+                                            <td>@(i.EquipmentModel ?? "-")</td>
+                                            <td>@(i.EquipmentSerial ?? "-")</td>
+                                            <td>@(string.IsNullOrWhiteSpace(i.AssignedTo) ? "-" : i.AssignedTo)</td>
+                                            <td>@i.AssignedAt?.ToLocalTime().ToString("g")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (Tab == AdminTab.Returned)
+        {
+            <div class="block">
+                <h2 class="section-title">Returned Inventory</h2>
+                <hr />
+                @if (_returnedInv is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _returnedInv;
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesInventory).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        <p>No returned items.</p>
+                    }
+                    else
+                    {
+                        <div class="@((list?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table">
+                                <thead><tr><th>Equipment</th><th>Model</th><th>Serial #</th><th>Returned</th><th class="th-right">Actions</th></tr></thead>
+                                <tbody>
+                                    @foreach (var r in list)
+                                    {
+                                        <tr>
+                                            <td>@r.EquipmentType</td>
+                                            <td>@(r.EquipmentModel ?? "-")</td>
+                                            <td>@(r.EquipmentSerial ?? "-")</td>
+                                            <td>@r.ReturnDate?.ToLocalTime().ToString("g")</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-outline-primary btn-sm" @onclick="() => MoveToInventory(r.Id)">Move to Inventory</button>
+                                                <button class="btn btn-outline-danger btn-sm" @onclick="() => Recycle(r.Id)">Recycle</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (Tab == AdminTab.Repair)
+        {
+            <div class="block">
+                <h2 class="section-title">Repair</h2>
+                <hr />
+                @if (_repairInv is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _repairInv;
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesInventory).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        <p>No items in repair.</p>
+                    }
+                    else
+                    {
+                        <div class="@((list?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table">
+                                <thead><tr><th>Equipment</th><th>Model</th><th>Serial #</th><th class="th-right">Actions</th></tr></thead>
+                                <tbody>
+                                    @foreach (var i in list)
+                                    {
+                                        <tr>
+                                            <td>@i.EquipmentType</td>
+                                            <td>@(i.EquipmentModel ?? "-")</td>
+                                            <td>@(i.EquipmentSerial ?? "-")</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-outline-primary btn-sm" @onclick="() => MoveToInventory(i.Id)">Move to Inventory</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (Tab == AdminTab.Recycled)
+        {
+            <div class="block">
+                <h2 class="section-title">Recycled Inventory</h2>
+                <hr />
+                @if (_recycledInv is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _recycledInv;
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesInventory).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        <p>No recycled items.</p>
+                    }
+                    else
+                    {
+                        <div class="@((list?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table">
+                                <thead><tr><th>Equipment</th><th>Model</th><th>Serial #</th><th>Recycled</th><th class="th-right">Actions</th></tr></thead>
+                                <tbody>
+                                    @foreach (var i in list)
+                                    {
+                                        <tr>
+                                            <td>@i.EquipmentType</td>
+                                            <td>@(i.EquipmentModel ?? "-")</td>
+                                            <td>@(i.EquipmentSerial ?? "-")</td>
+                                            <td>@i.ReturnDate?.ToLocalTime().ToString("g")</td>
+                                            <td class="text-end"><button class="btn btn-outline-primary btn-sm" @onclick="() => MoveToInventory(i.Id)">Restore</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (Tab == AdminTab.Closed)
+        {
+            <div class="block">
+                <h2 class="section-title">Closed Requests</h2>
+                <hr />
+                @if (_closed is null)
+                {
+                    <p>Loading…</p>
+                }
+                else
+                {
+                    var list = _closed;
+                    if (SearchTokens.Length > 0) list = list.Where(MatchesRequest).ToList();
+
+                    if (list.Count == 0)
+                    {
+                        <p>No closed requests.</p>
+                    }
+                    else
+                    {
+                        <div class="@((list?.Count ?? 0) > 3 ? "scroll-box scroll-tight" : null)">
+                            <table class="table">
+                                <thead><tr><th>Closed</th><th>Requester</th><th>Equipment</th><th>Status at Close</th><th>Note</th><th class="th-right">Actions</th></tr></thead>
+                                <tbody>
+                                    @foreach (var r in list)
+                                    {
+                                        <tr>
+                                            <td>@r.ClosedAt?.ToLocalTime().ToString("g")</td>
+                                            <td>
+                                                <div class="req-meta">
+                                                    <strong>@r.RequesterName</strong>
+                                                    <div class="small-muted">@r.Email</div>
+                                                </div>
+                                            </td>
+                                            <td>@r.EquipmentType</td>
+                                            <td>@r.Status</td>
+                                            <td>@(string.IsNullOrWhiteSpace(r.CloseNote) ? "-" : r.CloseNote)</td>
+                                            <td class="text-end"><button class="btn btn-sm btn-outline-primary" @onclick="() => ReopenAsync(r.Id)">Reopen</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if (showReport)
+        {
+            <div class="report-modal-backdrop">
+                <div class="report-modal">
+                    <div class="d-flex align-items-center" style="gap:.6rem;flex-wrap:wrap;margin-bottom:10px">
+                        <select class="form-select form-select-sm" style="min-width:180px" @bind="_reportType">
+                            <option value="Requests">Requests</option>
+                            <option value="Inventory">Inventory</option>
+                        </select>
+                        <input class="form-control form-control-sm" style="width:170px" type="date" @bind="startDate" />
+                        <input class="form-control form-control-sm" style="width:170px" type="date" @bind="endDate" />
+                        <button class="btn btn-sm btn-primary" @onclick="GenerateReportAsync">Generate</button>
+                        <button class="btn btn-sm btn-outline-secondary" style="margin-left:auto" @onclick="() => showReport = false">Close</button>
+                    </div>
+
+                    @if (_report is not null)
+                    {
+                        <div>
+                            <div class="report-head">
+                                <h3 class="mb-0">@_report.Title</h3>
+                                <div class="small-muted">Generated @_report.GeneratedLocal.ToString("g")</div>
+                            </div>
+                            <div class="@((_report.Rows.Count > 10) ? "scroll-box scroll-tight" : null)">
+                                <table class="report-table">
+                                    <thead><tr>@foreach (var c in _report.Columns){
+                                    <th>@c</th>
+                                }
+    </tr></thead>
+                                <tbody>
+                                    @foreach (var row in _report.Rows)
+                                    {
+                                        <tr>@for (int i=0;i<_report.Columns.Count;i++){
+                                        <td>@row[i]</td>
+                                    }
+    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                                }
+            </div>
         </div>
-      }
+                }
     </div>
-  </div>
 </div>
 
 @code {
-  private List<EquipmentRequest>? _requests;
-  private List<InventoryItem>? _currentInv;
-  private List<InventoryItem>? _returnedInv;
-  private List<EquipmentRequest>? _closed;
+    private enum AdminTab { Requests, Available, Assigned, Returned, Repair, Recycled, Closed }
+    private AdminTab Tab = AdminTab.Requests;
 
-  private Dictionary<string,int> _availableCounts = new(StringComparer.OrdinalIgnoreCase);
-
+    private List<EquipmentRequest>? _requests;
+    private List<InventoryItem>? _availableInv;
+    private List<InventoryItem>? _assignedInv;
+    private List<InventoryItem>? _returnedInv;
+    private List<InventoryItem>? _repairInv;
     private List<InventoryItem>? _recycledInv;
+    private List<EquipmentRequest>? _closed;
 
-  private Dictionary<string, List<InventoryItem>> _availableByType
-      = new(StringComparer.OrdinalIgnoreCase);
+    private int CountRepair => _repairInv?.Count ?? 0;
+    private int CountReq => _requests?.Count ?? 0;
+    private int CountAvail => _availableInv?.Count(i => i.Status == "Available") ?? 0;
+    private int CountAssigned => _assignedInv?.Count ?? 0;
+    private int CountReturned => _returnedInv?.Count ?? 0;
+    private int CountRecycled => _recycledInv?.Count ?? 0;
+    private int CountClosed => _closed?.Count ?? 0;
 
-  private Dictionary<int, int> _selectedItemForRequest = new();
+    private List<string> _availableTypes = new();
+    private string? availFilter;
 
-  private bool _busy;
+    private Dictionary<string, int> _availableCounts = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, List<InventoryItem>> _availableByType = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<int, int> _selectedItemForRequest = new();
 
-  protected override async Task OnInitializedAsync() => await LoadAsync();
+    private bool _busy;
+    private string? _loadError;
 
-  private async Task LoadAsync()
-  {
-    _requests = await Db.EquipmentRequests
-      .Where(r => !r.IsClosed && r.Status != "Returned")
-      .OrderByDescending(r => r.SubmittedAt)
-      .ToListAsync();
+    protected override async Task OnInitializedAsync() => await LoadAsync();
 
-    _currentInv = await Db.InventoryItems
-      .Where(i => i.Status == "Available" || i.Status == "Assigned")
-      .OrderBy(i => i.EquipmentType).ThenBy(i => i.Status)
-      .ToListAsync();
+    private async Task LoadAsync()
+    {
+        try
+        {
+            var avail = await Db.InventoryItems.Where(i => i.Status == "Available").AsNoTracking().ToListAsync();
 
-    _returnedInv = await Db.InventoryItems
-      .Where(i => i.Status == "Returned")
-      .OrderByDescending(i => i.ReturnDate)
-      .ToListAsync();
+            _availableInv = avail.OrderBy(i => i.EquipmentType).ThenBy(i => i.EquipmentModel).ThenBy(i => i.EquipmentSerial).ToList();
 
-    _availableCounts = await Db.InventoryItems
-      .Where(i => i.Status == "Available")
-      .GroupBy(i => i.EquipmentType)
-      .Select(g => new { Key = g.Key ?? "", Count = g.Count() })
-      .ToDictionaryAsync(x => x.Key, x => x.Count, StringComparer.OrdinalIgnoreCase);
+            _availableTypes = _availableInv.Select(i => (i.EquipmentType ?? "").Trim())
+                                           .Where(s => !string.IsNullOrWhiteSpace(s))
+                                           .Distinct(StringComparer.OrdinalIgnoreCase)
+                                           .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
+                                           .ToList();
 
-    _availableByType = await Db.InventoryItems
-      .Where(i => i.Status == "Available")
-      .OrderBy(i => i.EquipmentType).ThenBy(i => i.EquipmentModel).ThenBy(i => i.EquipmentSerial)
-      .GroupBy(i => i.EquipmentType ?? "")
-      .ToDictionaryAsync(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
+            _assignedInv = await Db.InventoryItems.Where(i => i.Status == "Assigned")
+                                                  .OrderBy(i => i.EquipmentType).ThenBy(i => i.AssignedTo).ToListAsync();
 
-    _closed = await Db.EquipmentRequests
-      .Where(r => r.IsClosed)
-      .OrderByDescending(r => r.ClosedAt)
-      .ThenByDescending(r => r.SubmittedAt)
-      .ToListAsync();
+            _returnedInv = await Db.InventoryItems.Where(i => i.Status == "Returned")
+                                                  .OrderByDescending(i => i.ReturnDate).ToListAsync();
 
-    _recycledInv = await Db.InventoryItems
-      .Where(i => i.Status == "Recycled")
-      .OrderByDescending(i => i.ReturnDate)
-      .ToListAsync();
-  }
+            _repairInv = await Db.InventoryItems.Where(i => i.Status == InventoryStatus.Repair || i.Status == "Repair")
+                                                .OrderByDescending(i => i.ReturnDate).ToListAsync();
 
-  private List<InventoryItem> AvailFor(string? type)
-      => _availableByType.TryGetValue(type ?? "", out var list) ? list : new List<InventoryItem>();
+            _recycledInv = await Db.InventoryItems.Where(i => i.Status == "Recycled")
+                                                  .OrderByDescending(i => i.ReturnDate).ToListAsync();
+
+            _requests = await Db.EquipmentRequests.Where(r => !r.IsClosed && r.Status != "Returned")
+                                                  .OrderByDescending(r => r.SubmittedAt).ToListAsync();
+
+            _closed = await Db.EquipmentRequests.Where(r => r.IsClosed)
+                                                .OrderByDescending(r => r.ClosedAt).ThenByDescending(r => r.SubmittedAt).ToListAsync();
+
+            _availableCounts = avail.GroupBy(i => (i.EquipmentType ?? "").Trim().ToLower())
+                                    .ToDictionary(g => g.Key, g => g.Count(), StringComparer.OrdinalIgnoreCase);
+
+            _availableByType = avail.GroupBy(i => (i.EquipmentType ?? "").Trim().ToLower())
+                                    .ToDictionary(g => g.Key,
+                                                  g => g.OrderBy(i => i.EquipmentType).ThenBy(i => i.EquipmentModel).ThenBy(i => i.EquipmentSerial).ToList(),
+                                                  StringComparer.OrdinalIgnoreCase);
+        }
+        catch (Exception ex)
+        {
+            _loadError = ex.Message;
+            _requests ??= new(); _availableInv ??= new(); _assignedInv ??= new();
+            _returnedInv ??= new(); _recycledInv ??= new(); _closed ??= new();
+        }
+    }
+
+    private void SetTab(AdminTab t) { Tab = t; StateHasChanged(); }
+
+    private void OnAvailFilterChange(ChangeEventArgs e) => availFilter = e?.Value?.ToString();
+
+    private List<InventoryItem> AvailFor(string? type)
+    {
+        var key = (type ?? "").Trim().ToLower();
+        return _availableByType.TryGetValue(key, out var list) ? list : new List<InventoryItem>();
+    }
+
+    private int CountAvailable(string? type)
+    {
+        var key = (type ?? "").Trim().ToLower();
+        return _availableCounts.TryGetValue(key, out var c) ? c : 0;
+    }
 
     private void OnSelectItem(int requestId, string? value)
     {
@@ -452,192 +1188,347 @@
         else _selectedItemForRequest.Remove(requestId);
     }
 
-  private async Task AssignSpecificAsync(int requestId, int itemId)
-  {
-    if (_busy) return; _busy = true;
-    try
+    private async Task AssignSpecificAsync(int requestId, int itemId)
     {
-      var req  = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
-      var item = await Db.InventoryItems.FirstOrDefaultAsync(i => i.Id == itemId && i.Status == "Available");
-      if (req is null || item is null) return;
-
-      if (!string.Equals(item.EquipmentType ?? "", req.EquipmentType ?? "", StringComparison.OrdinalIgnoreCase))
-        return;
-
-      item.Status = "Assigned";
-      item.AssignedTo = req.Email;
-      item.AssignedRequestId = req.Id;
-      item.AssignedAt = DateTime.UtcNow;
-
-      req.Status = "Fulfilled";
-
-      await Db.SaveChangesAsync();
-      _selectedItemForRequest.Remove(requestId);
-      await LoadAsync();
-      StateHasChanged();
-    }
-    finally { _busy = false; }
-  }
-
-  private async Task AssignFirstAvailableAsync(int requestId)
-  {
-    if (_busy) return; _busy = true;
-    try
-    {
-      var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
-      if (req is null) return;
-
-      var item = await Db.InventoryItems
-        .Where(i => i.EquipmentType == req.EquipmentType && i.Status == "Available")
-        .OrderBy(i => i.Id)
-        .FirstOrDefaultAsync();
-
-      if (item is null) return;
-
-      item.Status = "Assigned";
-      item.AssignedTo = req.Email;
-      item.AssignedRequestId = req.Id;
-      item.AssignedAt = DateTime.UtcNow;
-
-      req.Status = "Fulfilled";
-
-      await Db.SaveChangesAsync();
-      await LoadAsync();
-      StateHasChanged();
-    }
-    finally { _busy = false; }
-  }
-
-  private async Task CloseRequestAsync(int requestId)
-  {
-    if (_busy) return; _busy = true;
-    try
-    {
-      var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
-      if (req is null) return;
-
-      req.IsClosed = true;
-      req.ClosedAt = DateTime.UtcNow;
-      req.CloseNote = string.IsNullOrWhiteSpace(req.CloseNote) ? "Closed by admin." : req.CloseNote;
-
-      await Db.SaveChangesAsync();
-      await LoadAsync();
-      StateHasChanged();
-    }
-    finally { _busy = false; }
-  }
-
-  // Request → Returned
-  private async Task MarkRequestReturnedAsync(int requestId)
-  {
-    if (_busy) return; _busy = true;
-    try
-    {
-      var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
-      if (req is null) return;
-
-      req.Status = "Returned";
-
-      var item = await Db.InventoryItems
-        .FirstOrDefaultAsync(i => i.AssignedRequestId == req.Id);
-
-      if (item is null)
-      {
-        item = await Db.InventoryItems
-          .Where(i => i.Status == "Assigned" && i.EquipmentType == req.EquipmentType && i.AssignedTo == req.Email)
-          .OrderBy(i => i.Id)
-          .FirstOrDefaultAsync();
-      }
-
-      if (item is null)
-      {
-        var already = await Db.InventoryItems.AnyAsync(i => i.AssignedRequestId == req.Id && i.Status == "Returned");
-        if (!already)
+        if (_busy) return; _busy = true;
+        try
         {
-          Db.InventoryItems.Add(new InventoryItem
-          {
-            EquipmentType   = req.EquipmentType,
-            EquipmentModel  = req.EquipmentModel,
-            EquipmentSerial = req.EquipmentSerial,
-            Status          = "Returned",
-            AssignedTo      = null,
-            AssignedRequestId = req.Id,
-            AssignedAt      = null,
-            ReturnDate      = DateTime.UtcNow
-          });
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            var item = await Db.InventoryItems.FirstOrDefaultAsync(i => i.Id == itemId && i.Status == "Available");
+            if (req is null || item is null) return;
+            if (!string.Equals(item.EquipmentType ?? "", req.EquipmentType ?? "", StringComparison.OrdinalIgnoreCase)) return;
+
+            item.Status = "Assigned";
+            item.AssignedTo = req.Email;
+            item.AssignedRequestId = req.Id;
+            item.AssignedAt = DateTime.UtcNow;
+            req.Status = "Fulfilled";
+
+            await Db.SaveChangesAsync();
+            _selectedItemForRequest.Remove(requestId);
+            await LoadAsync();
+            StateHasChanged();
         }
-      }
-      else
-      {
-        if (string.IsNullOrWhiteSpace(item.EquipmentModel))  item.EquipmentModel  = req.EquipmentModel;
-        if (string.IsNullOrWhiteSpace(item.EquipmentSerial)) item.EquipmentSerial = req.EquipmentSerial;
-        if (string.IsNullOrWhiteSpace(item.EquipmentType))   item.EquipmentType   = req.EquipmentType;
-
-        item.Status     = "Returned";
-        item.ReturnDate = DateTime.UtcNow;
-        item.AssignedTo = null;
-      }
-
-      await Db.SaveChangesAsync();
-      await LoadAsync();
-      StateHasChanged();
+        finally { _busy = false; }
     }
-    finally { _busy = false; }
-  }
 
-  // Returned → Move to Inventory
-  private async Task MoveToInventory(int id)
-  {
-    var item = await Db.InventoryItems.FindAsync(id);
-    if (item is null) return;
-
-    item.Status = InventoryStatus.Available;
-    item.ReturnDate = null;
-    item.AssignedTo = null;
-    item.AssignedAt = null;
-    item.AssignedRequestId = null;
-
-    await Db.SaveChangesAsync();
-    await LoadAsync();
-  }
-
-  // Returned → Recycle
-  private async Task Recycle(int id)
-  {
-    var confirm = await JS.InvokeAsync<bool>("confirm", "Recycle this item? It will be removed from Returned.");
-    if (!confirm) return;
-
-    var item = await Db.InventoryItems.FindAsync(id);
-    if (item is null) return;
-
-    item.Status = InventoryStatus.Recycled;
-    item.ReturnDate ??= DateTime.UtcNow;
-
-    await Db.SaveChangesAsync();
-    await LoadAsync();
-  }
-
-  // Closed → Reopen (moves to Current Requests)
-  private async Task ReopenAsync(int requestId)
-  {
-    if (_busy) return; _busy = true;
-    try
+    private async Task CloseRequestAsync(int requestId)
     {
-      var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
-      if (req is null) return;
+        if (_busy) return; _busy = true;
+        try
+        {
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (req is null) return;
 
-      req.IsClosed = false;
-      req.ClosedAt = null;
-      req.Status = "Pending";
+            req.IsClosed = true;
+            req.ClosedAt = DateTime.UtcNow;
+            req.CloseNote ??= "Closed by admin.";
 
-      await Db.SaveChangesAsync();
-      await LoadAsync();
-      StateHasChanged();
+            await Db.SaveChangesAsync();
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
     }
-    finally { _busy = false; }
-  }
+
+    private async Task MarkRequestReturnedAsync(int requestId)
+    {
+        if (_busy) return; _busy = true;
+        try
+        {
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (req is null) return;
+
+            req.Status = "Returned";
+
+            var existing = await Db.InventoryItems.FirstOrDefaultAsync(i => i.AssignedRequestId == req.Id && i.Status == InventoryStatus.Returned);
+
+            if (existing is null)
+            {
+                Db.InventoryItems.Add(new InventoryItem
+                {
+                    EquipmentType = req.EquipmentType,
+                    EquipmentModel = req.EquipmentModel,
+                    EquipmentSerial = req.EquipmentSerial,
+                    Status = InventoryStatus.Returned,
+                    AssignedTo = null,
+                    AssignedRequestId = req.Id,
+                    AssignedAt = null,
+                    ReturnDate = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(existing.EquipmentType)) existing.EquipmentType = req.EquipmentType;
+                if (string.IsNullOrWhiteSpace(existing.EquipmentModel)) existing.EquipmentModel = req.EquipmentModel;
+                if (string.IsNullOrWhiteSpace(existing.EquipmentSerial)) existing.EquipmentSerial = req.EquipmentSerial;
+                existing.ReturnDate = DateTime.UtcNow;
+            }
+
+            await Db.SaveChangesAsync();
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+
+    private async Task MoveToInventory(int id)
+    {
+        var item = await Db.InventoryItems.FindAsync(id);
+        if (item is null) return;
+
+        item.Status = InventoryStatus.Available;
+        item.ReturnDate = null;
+        item.AssignedTo = null;
+        item.AssignedAt = null;
+        item.AssignedRequestId = null;
+
+        await Db.SaveChangesAsync();
+        await LoadAsync();
+    }
+
+    private async Task MoveToRepair(int id)
+    {
+        var item = await Db.InventoryItems.FindAsync(id);
+        if (item is null) return;
+
+        item.Status = InventoryStatus.Repair;
+        item.AssignedTo = null;
+        item.AssignedAt = null;
+        item.AssignedRequestId = null;
+
+        await Db.SaveChangesAsync();
+        await LoadAsync();
+    }
+
+    private async Task Recycle(int id)
+    {
+        var confirm = await JS.InvokeAsync<bool>("confirm", "Recycle this item? It will be removed from its current list.");
+        if (!confirm) return;
+
+        var item = await Db.InventoryItems.FindAsync(id);
+        if (item is null) return;
+
+        item.Status = InventoryStatus.Recycled;
+        item.ReturnDate ??= DateTime.UtcNow;
+
+        await Db.SaveChangesAsync();
+        await LoadAsync();
+    }
+
+    private bool showAddInv = false;
+    private InventoryItem newInv = new();
+
+    private void ToggleAddInventory() { showAddInv = !showAddInv; if (showAddInv) ResetNewInv(); }
+    private void CancelAddInventory() => showAddInv = false;
+
+    private void ResetNewInv()
+    {
+        newInv = new InventoryItem { EquipmentType = "", EquipmentModel = null, EquipmentSerial = null, Status = InventoryStatus.Available };
+        addCustomType = false; customType = null; addInvError = null;
+    }
+
+    private bool addCustomType;
+    private string? customType;
+    private string? addInvError;
+
+    private async Task AddInventoryAsync()
+    {
+        if (_busy) return; _busy = true;
+        try
+        {
+            addInvError = null;
+
+            if (addCustomType) newInv.EquipmentType = (customType ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(newInv.EquipmentType))
+            {
+                addInvError = "Please choose an equipment type."; return;
+            }
+
+            newInv.EquipmentType = newInv.EquipmentType.Trim();
+            newInv.EquipmentModel = string.IsNullOrWhiteSpace(newInv.EquipmentModel) ? null : newInv.EquipmentModel!.Trim();
+            newInv.EquipmentSerial = string.IsNullOrWhiteSpace(newInv.EquipmentSerial) ? null : newInv.EquipmentSerial!.Trim();
+            newInv.Status = InventoryStatus.Available;
+
+            Db.InventoryItems.Add(newInv);
+            await Db.SaveChangesAsync();
+
+            await LoadAsync();
+            showAddInv = false;
+            ResetNewInv();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+
+    private async Task ReopenAsync(int requestId)
+    {
+        if (_busy) return; _busy = true;
+        try
+        {
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (req is null) return;
+
+            req.IsClosed = false;
+            req.ClosedAt = null;
+            req.Status = "Pending";
+            req.CloseNote = null;
+            req.SubmittedAt = DateTime.UtcNow;
+
+            await Db.SaveChangesAsync();
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+
+    private async Task ApproveAsync(int requestId)
+    {
+        if (_busy) return; _busy = true;
+        try
+        {
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (req is null) return;
+
+            req.Status = "Approved";
+            await Db.SaveChangesAsync();
+
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+
+    private async Task DenyAsync(int requestId)
+    {
+        if (_busy) return; _busy = true;
+        try
+        {
+            var req = await Db.EquipmentRequests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (req is null) return;
+
+            req.Status = "Denied";
+            req.IsClosed = true;
+            req.ClosedAt = DateTime.UtcNow;
+            req.CloseNote ??= "Denied by admin.";
+
+            await Db.SaveChangesAsync();
+            await LoadAsync();
+            StateHasChanged();
+        }
+        finally { _busy = false; }
+    }
+
+    private static readonly HashSet<string> ManagerEmails = new(StringComparer.OrdinalIgnoreCase) { "manager@test.com" };
+    private bool IsManagerRequest(EquipmentRequest r) => !string.IsNullOrWhiteSpace(r.Email) && ManagerEmails.Contains(r.Email);
+
+    private string? search;
+    private void ClearSearch() => search = string.Empty;
+
+    private string[] SearchTokens => string.IsNullOrWhiteSpace(search)
+      ? Array.Empty<string>()
+      : search!.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+    private static string JoinFields(params string?[] parts) => string.Join(' ', parts.Where(p => !string.IsNullOrWhiteSpace(p)));
+
+    private bool MatchesJoined(params string?[] fields)
+    {
+        if (SearchTokens.Length == 0) return true;
+        var haystack = JoinFields(fields);
+        foreach (var t in SearchTokens) if (!haystack.Contains(t, StringComparison.OrdinalIgnoreCase)) return false;
+        return true;
+    }
+
+    private bool MatchesRequest(EquipmentRequest r) =>
+      MatchesJoined(r.RequesterName, r.Email, r.EquipmentType, r.EquipmentModel, r.EquipmentSerial, r.Status, r.Reason);
+
+    private bool MatchesInventory(InventoryItem i) =>
+      MatchesJoined(i.EquipmentType, i.EquipmentModel, i.EquipmentSerial, i.Status, i.AssignedTo);
 
     private int SelectedIdOrZero(int requestId) =>
       _selectedItemForRequest.TryGetValue(requestId, out var id) ? id : 0;
+
+    private bool showReport;
+    private enum ReportType { Requests, Inventory }
+    private ReportType _reportType = ReportType.Requests;
+    private DateTime? startDate = DateTime.Today.AddDays(-30);
+    private DateTime? endDate = DateTime.Today;
+
+    private sealed class ReportOutput
+    {
+        public string Title { get; set; } = "";
+        public DateTime GeneratedUtc { get; set; } = DateTime.UtcNow;
+        public DateTime GeneratedLocal => GeneratedUtc.ToLocalTime();
+        public List<string> Columns { get; set; } = new();
+        public List<string[]> Rows { get; set; } = new();
+    }
+
+    private ReportOutput? _report;
+
+    private async Task GenerateReportAsync()
+    {
+        var from = startDate?.Date ?? DateTime.MinValue;
+        var to = (endDate?.Date ?? DateTime.MaxValue).AddDays(1);
+
+        if (_reportType == ReportType.Requests)
+        {
+            var data = await Db.EquipmentRequests.Where(r => r.SubmittedAt >= from && r.SubmittedAt < to)
+                                                 .OrderByDescending(r => r.SubmittedAt).ToListAsync();
+
+            _report = new ReportOutput
+            {
+                Title = $"Requests ({from.ToShortDateString()} – {to.AddDays(-1).ToShortDateString()})",
+                Columns = new() { "Request #", "Submitted", "Requester", "Email", "Type", "Model", "Serial", "Status", "Closed?" }
+            };
+
+            foreach (var r in data)
+            {
+                _report.Rows.Add(new[]
+                {
+          r.Id.ToString(),
+          r.SubmittedAt.ToLocalTime().ToString("g"),
+          r.RequesterName ?? "-",
+          r.Email ?? "-",
+          r.EquipmentType ?? "-",
+          string.IsNullOrWhiteSpace(r.EquipmentModel) ? "-" : r.EquipmentModel!,
+          string.IsNullOrWhiteSpace(r.EquipmentSerial) ? "-" : r.EquipmentSerial!,
+          r.Status ?? "-",
+          r.IsClosed ? "Yes" : "No"
+        });
+            }
+        }
+        else
+        {
+            var data = await Db.InventoryItems.OrderBy(i => i.EquipmentType).ThenBy(i => i.EquipmentModel).ThenBy(i => i.EquipmentSerial).ToListAsync();
+
+            _report = new ReportOutput
+            {
+                Title = "Inventory Snapshot",
+                Columns = new() { "Item #", "Type", "Model", "Serial", "Status", "Assigned To", "Assigned", "Returned" }
+            };
+
+            foreach (var i in data)
+            {
+                _report.Rows.Add(new[]
+                {
+          i.Id.ToString(),
+          i.EquipmentType ?? "-",
+          string.IsNullOrWhiteSpace(i.EquipmentModel) ? "-" : i.EquipmentModel!,
+          string.IsNullOrWhiteSpace(i.EquipmentSerial) ? "-" : i.EquipmentSerial!,
+          i.Status?.ToString() ?? "-",
+          string.IsNullOrWhiteSpace(i.AssignedTo) ? "-" : i.AssignedTo!,
+          i.AssignedAt?.ToLocalTime().ToString("g") ?? "-",
+          i.ReturnDate?.ToLocalTime().ToString("g") ?? "-"
+        });
+            }
+        }
+
+        _report!.GeneratedUtc = DateTime.UtcNow;
+        StateHasChanged();
+    }
+
+    private void SignOut()
+    {
+        Nav.NavigateTo("/login", forceLoad: true);
     }
 }

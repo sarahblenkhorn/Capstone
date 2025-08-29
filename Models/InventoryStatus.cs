@@ -5,6 +5,7 @@
         public const string Available = "Available";
         public const string Assigned = "Assigned";
         public const string Returned = "Returned";
+        public const string Repair = "Repair";
         public const string Recycled = "Recycled";
     }
 }

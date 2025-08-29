@@ -7,146 +7,265 @@
 @inject IJSRuntime JS
 
 <style>
-    .user-container {
+    .page-wrap {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        background-color: #f8f9fa;
+        min-height: 100vh;
+        background: #f8f9fa
     }
 
-    .user-box {
+    .card {
         width: 100%;
-        max-width: 700px;
-        padding: 2rem;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,.1);
+        max-width: 720px;
         background: #fff;
-        position: relative;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 6px 14px rgba(0,0,0,.06)
     }
 
-    .signout-link {
+    .card-body {
+        padding: 24px 28px
+    }
+
+    .backlink {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
+        right: 28px;
+        top: 20px
     }
 
-    .user-header {
+    .title {
         text-align: center;
-        margin-top: 2rem;
+        margin-top: 8px;
+        margin-bottom: 4px
+    }
+
+    .status-line {
+        text-align: center;
+        margin-bottom: 12px
     }
 
     .status-approved {
-        color: green;
-        font-weight: bold;
+        color: #0b7a28;
+        font-weight: 700
     }
 
     .status-denied {
-        color: red;
-        font-weight: bold;
+        color: #9b1c1c;
+        font-weight: 700
     }
 
     .status-pending {
-        color: orange;
-        font-weight: bold;
+        color: #c58100;
+        font-weight: 700
     }
 
     .status-neutral {
-        color: gray;
-        font-weight: bold;
+        color: #666;
+        font-weight: 700
     }
 
-    .detail-row {
-        display: flex;
-        gap: 1rem;
-        padding: .35rem 0;
+    .details {
+        max-width: 520px;
+        margin: 0 auto
     }
 
-    .detail-label {
-        width: 140px;
-        color: #6c757d;
-        font-weight: 600;
+    .row {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 6px 16px;
+        align-items: center;
+        padding: 6px 0
     }
 
-    .detail-value {
-        flex: 1;
-        word-break: break-word;
+    .label {
+        color: #6b7280;
+        font-weight: 600
     }
 
-    .btn-row {
+    .value {
+        word-break: break-word
+    }
+
+    .btnbar {
         display: flex;
         gap: .5rem;
-        margin-top: 1rem;
+        margin: 10px auto 6px;
+        justify-content: center
+    }
+
+    .btn {
+        padding: .35rem .65rem;
+        border: 1px solid #bbb;
+        background: #f7f7f7;
+        border-radius: 6px
+    }
+
+    .btn-warning {
+        border-color: #e0a800
+    }
+
+    .btn-primary {
+        border-color: #0d6efd
+    }
+
+    .btn-outline {
+        background: #fff
+    }
+
+    .savebar {
+        display: flex;
+        gap: .5rem;
+        justify-content: center;
+        margin-top: 10px
+    }
+
+    input.form, textarea.form {
+        width: 100%;
+        max-width: 340px;
+        padding: .38rem .5rem;
+        border: 1px solid #cfd3d8;
+        border-radius: 6px
+    }
+
+    textarea.form {
+        min-height: 86px;
+        resize: vertical
     }
 </style>
 
-<div class="user-container">
-    <div class="user-box">
-        <a class="signout-link" href="@(from == "manager" ? "/manager" : "/user")">Back to My Requests</a>
+<div class="page-wrap">
+    <div class="card">
+        <div class="card-body">
+            <a class="backlink" href="@(from == "manager" ? "/manager" : "/user")">Back to My Requests</a>
 
-
-        <div class="user-header">
-            <h2 class="form-title mb-0">Request Details</h2>
+            <h2 class="title">Request Details</h2>
             @if (req != null)
+            {
+                <div class="status-line @(StatusClass(req.Status))">@req.Status</div>
+            }
+
+            @if (!string.IsNullOrEmpty(loadError))
+            {
+                <div class="alert alert-danger mt-2">@loadError</div>
+            }
+            else if (isLoading)
+            {
+                <p class="text-center mt-2">Loading…</p>
+            }
+            else if (req == null)
+            {
+                <div class="alert alert-warning mt-2">Request not found.</div>
+            }
+            else
+            {
+                <EditForm Model="@edit" OnValidSubmit="@SaveEditAsync">
+                    <div class="details">
+
+                        <div class="row"><div class="label">Request #</div><div class="value">@req.Id</div></div>
+                        <div class="row"><div class="label">Submitted</div><div class="value">@req.SubmittedAt.ToLocalTime().ToString("f")</div></div>
+
+                        <div class="row">
+                            <div class="label">Type</div>
+                            <div class="value">
+                                @if (isEditing)
+                                {
+                                    <input class="form" @bind="edit.EquipmentType" />
+                                }
+                                else
+                                {
+
+                                    @req.EquipmentType
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="label">Model</div>
+                            <div class="value">
+                                @if (isEditing)
+                                {
+                                    <input class="form" @bind="edit.EquipmentModel" />
+                                }
+                                else
+                                {
+
+                                    @(string.IsNullOrWhiteSpace(req.EquipmentModel) ? "-" : req.EquipmentModel)
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="label">Serial</div>
+                            <div class="value">
+                                @if (isEditing)
+                                {
+                                    <input class="form" @bind="edit.EquipmentSerial" />
+                                }
+                                else
+                                {
+
+                                    @(string.IsNullOrWhiteSpace(req.EquipmentSerial) ? "-" : req.EquipmentSerial)
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row" style="align-items:start">
+                            <div class="label">Reason</div>
+                            <div class="value">
+                                @if (isEditing)
+                                {
+                                    <textarea class="form" @bind="edit.Reason"></textarea>
+                                }
+                                else
+                                {
+
+                                    @(string.IsNullOrWhiteSpace(req.Reason) ? "-" : req.Reason)
+                                }
+                            </div>
+                        </div>
+
+                        <div class="btnbar">
+                            <button type="button" class="btn" @onclick="GoBack">Back</button>
+
+                            @if (CanEdit && !isEditing)
+                            {
+                                <button type="button" class="btn btn-primary" @onclick="BeginEdit">Modify</button>
+                            }
+
+                            @if (req.Status == "Pending" && !isEditing)
+                            {
+                                <button type="button" class="btn btn-warning" @onclick="CancelThis">Cancel Request</button>
+                            }
+                        </div>
+
+                        @if (isEditing)
                         {
-            <div class="@StatusClass(req.Status)" style="margin-top:.25rem;">
-                @req.Status
-            </div>
+                            <div class="savebar">
+                                <button type="submit" class="btn btn-primary" disabled="@busy">Save</button>
+                                <button type="button" class="btn btn-outline" @onclick="CancelEdit">Discard</button>
+                            </div>
                         }
+                    </div>
+                </EditForm>
+            }
         </div>
-
-        @if (!string.IsNullOrEmpty(loadError))
-        {
-            <div class="alert alert-danger mt-3">@loadError</div>
-        }
-        else if (isLoading)
-        {
-            <p class="text-center mt-3">Loading…</p>
-        }
-        else if (req == null)
-        {
-            <div class="alert alert-warning mt-3">Request not found.</div>
-        }
-        else
-        {
-            <div class="mt-4">
-                <div class="detail-row"><div class="detail-label">Request #</div><div class="detail-value">@req.Id</div></div>
-                <div class="detail-row"><div class="detail-label">Submitted</div><div class="detail-value">@req.SubmittedAt.ToLocalTime().ToString("f")</div></div>
-                <div class="detail-row"><div class="detail-label">Type</div><div class="detail-value">@req.EquipmentType</div></div>
-
-                @if (!string.IsNullOrWhiteSpace(req.EquipmentModel))
-                {
-                    <div class="detail-row"><div class="detail-label">Model</div><div class="detail-value">@req.EquipmentModel</div></div>
-                }
-                @if (!string.IsNullOrWhiteSpace(req.EquipmentSerial))
-                {
-                    <div class="detail-row"><div class="detail-label">Serial</div><div class="detail-value">@req.EquipmentSerial</div></div>
-                }
-                @if (!string.IsNullOrWhiteSpace(req.Reason))
-                {
-                    <div class="detail-row"><div class="detail-label">Reason</div><div class="detail-value">@req.Reason</div></div>
-                }
-
-                <div class="btn-row">
-                    <button class="btn btn-secondary" @onclick="GoBack">Back</button>
-
-                    @if (req.Status == "Pending")
-                    {
-                        <button class="btn btn-warning" @onclick="CancelThis">Cancel Request</button>
-                    }
-                </div>
-            </div>
-        }
     </div>
 </div>
 
 @code {
     [Parameter] public int id { get; set; }
     [SupplyParameterFromQuery] public string? from { get; set; }
-    private EquipmentRequest req;
+
+    private EquipmentRequest? req;
     private bool isLoading = true;
-    private string loadError;
+    private string? loadError;
+
+    private bool isEditing = false;
+    private bool busy = false;
+    private EditModel edit = new();
+
+    private bool CanEdit => req is not null && req.Status == "Pending";
 
     protected override async Task OnParametersSetAsync()
     {
@@ -154,39 +273,85 @@
         {
             isLoading = true;
             req = await Db.EquipmentRequests.FindAsync(id);
+            if (req != null)
+            {
+                edit = new EditModel
+                {
+                    EquipmentType = req.EquipmentType,
+                    EquipmentModel = req.EquipmentModel,
+                    EquipmentSerial = req.EquipmentSerial,
+                    Reason = req.Reason
+                };
+            }
         }
-        catch (Exception ex)
-        {
-            loadError = ex.Message;
-        }
-        finally
-        {
-            isLoading = false;
-        }
+        catch (Exception ex) { loadError = ex.Message; }
+        finally { isLoading = false; }
     }
 
-    private string StatusClass(string status)
+    private string StatusClass(string status) => status switch
     {
-        if (status == "Approved") return "status-approved";
-        if (status == "Denied") return "status-denied";
-        if (status == "Needs More Info" || status == "Pending") return "status-pending";
-        if (status == "Cancelled") return "status-neutral";
-        return "status-neutral";
+        "Approved" => "status-approved",
+        "Denied" => "status-denied",
+        "Needs More Info" or "Pending" => "status-pending",
+        "Cancelled" => "status-neutral",
+        _ => "status-neutral"
+    };
+
+    private void BeginEdit()
+    {
+        if (req == null) return;
+        isEditing = true;
+    }
+
+    private void CancelEdit()
+    {
+        if (req == null) return;
+        edit = new EditModel
+        {
+            EquipmentType = req.EquipmentType,
+            EquipmentModel = req.EquipmentModel,
+            EquipmentSerial = req.EquipmentSerial,
+            Reason = req.Reason
+        };
+        isEditing = false;
+    }
+
+    private async Task SaveEditAsync()
+    {
+        if (req == null) return;
+        try
+        {
+            busy = true;
+            req.EquipmentType = edit.EquipmentType?.Trim();
+            req.EquipmentModel = string.IsNullOrWhiteSpace(edit.EquipmentModel) ? null : edit.EquipmentModel.Trim();
+            req.EquipmentSerial = string.IsNullOrWhiteSpace(edit.EquipmentSerial) ? null : edit.EquipmentSerial.Trim();
+            req.Reason = string.IsNullOrWhiteSpace(edit.Reason) ? null : edit.Reason.Trim();
+
+            await Db.SaveChangesAsync();
+            isEditing = false;
+        }
+        finally { busy = false; }
     }
 
     private async Task CancelThis()
     {
         if (req == null || req.Status != "Pending") return;
-
         var ok = await JS.InvokeAsync<bool>("confirm", "Cancel this request?");
         if (!ok) return;
-
         req.Status = "Cancelled";
         req.IsClosed = true;
         await Db.SaveChangesAsync();
-
         StateHasChanged();
     }
 
     private void GoBack() => Nav.NavigateTo(from == "manager" ? "/manager" : "/user");
+
+    private sealed class EditModel
+    {
+        public string? EquipmentType { get; set; }
+        public string? EquipmentModel { get; set; }
+        public string? EquipmentSerial { get; set; }
+        public string? Reason { get; set; }
+    }
 }
+

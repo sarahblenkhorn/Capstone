@@ -2,13 +2,26 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 @inject ApplicationDbContext Db
+@using Microsoft.AspNetCore.Components
 
 @code {
+    [SupplyParameterFromQuery(Name = "return")] public string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery(Name = "forEmail")] public string? ForEmail { get; set; }
+    [SupplyParameterFromQuery(Name = "forName")] public string? ForName { get; set; }
+    [SupplyParameterFromQuery(Name = "forDept")] public string? ForDept { get; set; }
+
     private EquipmentRequest model = new();
     private string? error;
 
-    [SupplyParameterFromQuery(Name = "return")]
-    public string? Return { get; set; }
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrWhiteSpace(ForEmail)) model.Email = ForEmail!;
+        if (!string.IsNullOrWhiteSpace(ForName)) model.RequesterName = ForName!;
+        if (!string.IsNullOrWhiteSpace(ForDept)) model.Department = ForDept!;
+
+        var isManager = string.Equals(model.Email, "manager@test.com", StringComparison.OrdinalIgnoreCase);
+        model.ManagerEmail = isManager ? "admin@test.com" : "manager@test.com";
+    }
 
     private async Task HandleSubmit()
     {
@@ -21,21 +34,15 @@
             Db.EquipmentRequests.Add(model);
             await Db.SaveChangesAsync();
 
-            var dest = string.IsNullOrWhiteSpace(Return) ? "/user" : Return!;
-            Nav.NavigateTo(dest);
+            Nav.NavigateTo(string.IsNullOrWhiteSpace(ReturnUrl) ? "/user" : ReturnUrl!);
         }
-        catch (Exception ex)
-        {
-            error = ex.Message;
-        }
+        catch (Exception ex) { error = ex.Message; }
     }
 
     private void Cancel()
-    {
-        var dest = string.IsNullOrWhiteSpace(Return) ? "/user" : Return!;
-        Nav.NavigateTo(dest);
-    }
+        => Nav.NavigateTo(string.IsNullOrWhiteSpace(ReturnUrl) ? "/user" : ReturnUrl!);
 }
+
 
 <style>
     .form-container {

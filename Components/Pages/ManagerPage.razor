@@ -6,149 +6,573 @@
 @rendermode InteractiveServer
 
 <style>
-    .user-container { display:flex; justify-content:center; align-items:center; min-height:100vh; background:#f8f9fa; }
-    .user-box { width:100%; max-width:700px; padding:2rem; border:1px solid #ccc; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.1); background:#fff; position:relative; }
-    .signout-link { position:absolute; top:1rem; right:1rem; }
-    .user-header { text-align:center; margin-top:2rem; }
-    .request-list { list-style:none; padding-left:0; }
-    .request-list li { display:flex; justify-content:space-between; align-items:center; padding:.35rem 0; gap:.75rem; }
-    .status-approved { color:green; font-weight:700; }
-    .status-denied { color:red; font-weight:700; }
-    .status-pending { color:orange; font-weight:700; }
-    .status-neutral { color:gray; font-weight:700; }
-    .req-meta { font-size:.9rem; color:#6c757d; }
+    .user-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f8f9fa;
+        padding: 24px 16px
+    }
+
+    .user-box {
+        width: 100%;
+        max-width: 700px;
+        padding: 2rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,.1);
+        position: relative
+    }
+
+    .signout-link {
+        position: absolute;
+        top: 1rem;
+        right: 1rem
+    }
+
+    .user-header {
+        text-align: center;
+        margin-top: .5rem
+    }
+
+    .req-meta {
+        font-size: .9rem;
+        color: #6c757d
+    }
+
+    .request-list {
+        list-style: none;
+        padding-left: 0
+    }
+
+        .request-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .5rem 0;
+            gap: .75rem;
+            border-bottom: 1px solid #f1f1f1
+        }
+
+    .status-approved {
+        color: green;
+        font-weight: 700
+    }
+
+    .status-denied {
+        color: red;
+        font-weight: 700
+    }
+
+    .status-pending {
+        color: orange;
+        font-weight: 700
+    }
+
+    .status-neutral {
+        color: gray;
+        font-weight: 700
+    }
+
+    .tabbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        margin: 1rem 0 1.25rem
+    }
+
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .35rem .75rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        border: 1px solid #e5e7eb;
+        background: #f3f4f6;
+        color: #374151;
+        cursor: pointer;
+        user-select: none;
+        transition: .12s
+    }
+
+        .pill .badge {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 9999px;
+            padding: .05rem .45rem;
+            font-weight: 700;
+            font-size: .8rem;
+            line-height: 1.2
+        }
+
+    .pill-a {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8
+    }
+
+    .pill-b {
+        background: #f3f4f6;
+        border-color: #e5e7eb;
+        color: #374151
+    }
+
+    .pill-c {
+        background: #fdf2f8;
+        border-color: #fbcfe8;
+        color: #9d174d
+    }
+
+    .pill.active {
+        box-shadow: 0 1px 0 rgba(0,0,0,.02),0 0 0 2px rgba(0,0,0,.03) inset
+    }
+
+    .actions {
+        display: flex;
+        gap: .5rem
+    }
+
+    .page-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f8f9fa
+    }
+
+    .card {
+        width: 100%;
+        max-width: 720px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 6px 14px rgba(0,0,0,.06)
+    }
+
+    .card-body {
+        padding: 24px 28px
+    }
+
+    .backlink {
+        position: absolute;
+        right: 28px;
+        top: 20px
+    }
+
+    .title {
+        text-align: center;
+        margin-top: 8px;
+        margin-bottom: 4px
+    }
+
+    .status-line {
+        text-align: center;
+        margin-bottom: 12px
+    }
+
+    .status-approved {
+        color: #0b7a28;
+        font-weight: 700
+    }
+
+    .status-denied {
+        color: #9b1c1c;
+        font-weight: 700
+    }
+
+    .status-pending {
+        color: #c58100;
+        font-weight: 700
+    }
+
+    .status-neutral {
+        color: #666;
+        font-weight: 700
+    }
+
+    .details {
+        max-width: 520px;
+        margin: 0 auto
+    }
+
+    .row {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 6px 16px;
+        align-items: center;
+        padding: 6px 0
+    }
+
+    .label {
+        color: #6b7280;
+        font-weight: 600
+    }
+
+    .value {
+        word-break: break-word
+    }
+
+    .btn {
+        appearance: none;
+        background: #fff;
+        color: #111827;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: .4rem .75rem;
+        font-weight: 600;
+        line-height: 1.2;
+        box-shadow: 0 1px 0 rgba(0,0,0,.02);
+        transition: background .15s,border-color .15s,box-shadow .15s;
+    }
+
+        .btn:hover {
+            background: #f9fafb;
+            border-color: #cbd5e1;
+        }
+
+        .btn:active {
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.06);
+        }
+
+        .btn[disabled] {
+            opacity: .55;
+            pointer-events: none;
+        }
+
+    .btn-sm {
+        padding: .3rem .6rem;
+        font-size: .9rem;
+        border-radius: 8px;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-outline-dark {
+        color: #374151;
+        border-color: #d1d5db;
+        background: #fff;
+    }
+
+        .btn-primary:hover,
+        .btn-secondary:hover,
+        .btn-outline-dark:hover {
+            background: #f9fafb;
+        }
+
+    .btn-outline-success {
+        color: #166534;
+        border-color: #86efac;
+        background: #fff;
+    }
+
+        .btn-outline-success:hover {
+            background: #ecfdf5;
+        }
+
+    .btn-outline-danger {
+        color: #991b1b;
+        border-color: #fecaca;
+        background: #fff;
+    }
+
+        .btn-outline-danger:hover {
+            background: #fef2f2;
+        }
+
+    .btn-outline-warning {
+        color: #92400e;
+        border-color: #fde68a;
+        background: #fff;
+    }
+
+        .btn-outline-warning:hover {
+            background: #fffbeb;
+        }
+
+    .btn-outline-primary {
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+        background: #fff;
+    }
+
+        .btn-outline-primary:hover {
+            background: #eff6ff;
+        }
+
+    .btnbar {
+        display: flex;
+        gap: .5rem;
+        margin: 10px auto 6px;
+        justify-content: center
+    }
+
+    .btn {
+        padding: .35rem .65rem;
+        border: 1px solid #bbb;
+        background: #f7f7f7;
+        border-radius: 6px
+    }
+
+    .btn-warning {
+        border-color: #e0a800
+    }
+
+    .btn-primary {
+        border-color: #0d6efd
+    }
+
+    .btn-outline {
+        background: #fff
+    }
+
+    .savebar {
+        display: flex;
+        gap: .5rem;
+        justify-content: center;
+        margin-top: 10px
+    }
+
+    .signout-link {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    input.form, textarea.form {
+        width: 100%;
+        max-width: 340px;
+        padding: .38rem .5rem;
+        border: 1px solid #cfd3d8;
+        border-radius: 6px
+    }
+
+    textarea.form {
+        min-height: 86px;
+        resize: vertical
+    }
 </style>
 
 <div class="user-container">
- <div class="user-box">
-   <a class="signout-link" href="/login">Sign out</a>
+    <div class="user-box">
+        <button class="btn btn-danger signout-link"
+                @onclick="SignOut">
+            Sign Out
+        </button>
 
-   <div class="user-header">
-     <h2 class="form-title">Hello, Manager</h2>
+        <div class="user-header">
+            <h2 class="form-title">Hello, Manager</h2>
             <button class="btn btn-primary mt-2" @onclick="GoToNew">Submit a New Request</button>
-   </div>
+        </div>
 
-   <h4 class="mt-4">Approval Requests</h4>
-   <hr />
+        <div class="tabbar">
+            <button class="pill pill-a @(MTab == ManagerTab.Approvals ? "active" : null)"
+                    @onclick="() => SetTab(ManagerTab.Approvals)">
+                Approvals <span class="badge">@CountApprovals</span>
+            </button>
 
-   @if (loading)         { <p>Loading…</p> }
-   else if (loadError != null) { <div class="alert alert-danger">@loadError</div> }
-   else
-   {
-     @if (approvals.Count == 0)
-     {
-        <p>No approval requests right now.</p>
-     }
-     else
-     {
-       <ul class="request-list">
-         @foreach (var r in approvals)
-         {
-           <li>
-             <div>
-               <a href="@($"/request/{r.Id}?from=manager")"><strong>@r.RequesterName</strong> • @r.Email</a>
-               <div class="req-meta">
-                 @r.SubmittedAt.ToLocalTime().ToString("g") · @r.Department · @r.EquipmentType
-                 @if (!string.IsNullOrWhiteSpace(r.Reason)) { <text> · @r.Reason</text> }
-               </div>
-             </div>
+            <button class="pill pill-b @(MTab == ManagerTab.Current ? "active" : null)"
+                    @onclick="() => SetTab(ManagerTab.Current)">
+                Current <span class="badge">@CountCurrent</span>
+            </button>
 
-             <div class="d-flex gap-2">
-               <button class="btn btn-outline-success btn-sm" @onclick="() => Approve(r.Id)">Approve</button>
-               <button class="btn btn-outline-danger btn-sm"  @onclick="() => Deny(r.Id)">Deny</button>
-             </div>
-           </li>
-         }
-       </ul>
-     }
+            <button class="pill pill-c @(MTab == ManagerTab.Past ? "active" : null)"
+                    @onclick="() => SetTab(ManagerTab.Past)">
+                Past <span class="badge">@CountPast</span>
+            </button>
+        </div>
 
-     <h4 class="mt-4">My Requests</h4>
-     <hr />
+        @if (loading)
+        {
+            <p>Loading…</p>
+        }
+        else if (loadError != null)
+        {
 
-     @if (mine.Count == 0)
-     {
-        <p>You haven’t submitted any requests.</p>
-     }
-     else
-     {
-       <ul class="request-list">
-         @foreach (var r in mine)
-         {
-           <li>
-             <div>
-               <a href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
-               <div class="req-meta">
-                 @r.SubmittedAt.ToLocalTime().ToString("g") · @r.EquipmentType
-               </div>
-             </div>
-             <span class="@StatusClass(r.Status)">@r.Status</span>
-           </li>
-         }
-       </ul>
-     }
-   }
- </div>
+            <div class="alert alert-danger">@loadError</div>
+        }
+        else
+        {
+            @if (MTab == ManagerTab.Approvals)
+            {
+                <h4 class="mt-2">Approval Requests</h4>
+                <hr />
+                @if (approvals.Count == 0)
+                {
+                    <p>No approval requests right now.</p>
+                }
+                else
+                {
+                    <ul class="request-list">
+                        @foreach (var r in approvals)
+                        {
+                            <li>
+                                <div>
+                                    <a href="@($"/request/{r.Id}?from=manager")"><strong>@r.RequesterName</strong> • @r.Email</a>
+                                    <div class="req-meta">
+                                        @r.SubmittedAt.ToLocalTime().ToString("g") · @r.Department · @r.EquipmentType
+                                        @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                        {
+                                            <text> · @r.Reason</text>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-outline-success btn-sm" @onclick="() => Approve(r.Id)">Approve</button>
+                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => Deny(r.Id)">Deny</button>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+            else if (MTab == ManagerTab.Current)
+            {
+                <h4 class="mt-2">My Current Requests</h4>
+                <hr />
+                @if (currentMine.Count == 0)
+                {
+                    <p>No current requests.</p>
+                }
+                else
+                {
+                    <ul class="request-list">
+                        @foreach (var r in currentMine)
+                        {
+                            <li>
+                                <div>
+                                    <a href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
+                                    <div class="req-meta">
+                                        @r.SubmittedAt.ToLocalTime().ToString("g") · @r.EquipmentType
+                                    </div>
+                                </div>
+                                <span class="@StatusClass(r.Status)">@r.Status</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+            else
+            {
+                <h4 class="mt-2">Past Requests</h4>
+                <hr />
+                @if (pastMine.Count == 0)
+                {
+                    <p>No past requests yet.</p>
+                }
+                else
+                {
+                    <ul class="request-list">
+                        @foreach (var r in pastMine)
+                        {
+                            <li>
+                                <div>
+                                    <a href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
+                                    <div class="req-meta">
+                                        @r.SubmittedAt.ToLocalTime().ToString("g") · @r.EquipmentType
+                                    </div>
+                                </div>
+                                <span class="@StatusClass(r.Status)">@r.Status</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        }
+    </div>
 </div>
 
 @code {
-  private string currentUserEmail = "manager@test.com";
+    private string currentUserEmail = "manager@test.com";
 
-  private bool loading = true;
-  private string? loadError;
-  private List<EquipmentRequest> approvals = new();
-  private List<EquipmentRequest> mine = new();
+    private enum ManagerTab { Approvals, Current, Past }
+    private ManagerTab MTab = ManagerTab.Approvals;
 
-  protected override async Task OnInitializedAsync()
-  {
-    try
+    private bool loading = true;
+    private string? loadError;
+
+    private List<EquipmentRequest> approvals = new();
+    private List<EquipmentRequest> currentMine = new();
+    private List<EquipmentRequest> pastMine = new();
+
+    private int CountApprovals => approvals?.Count ?? 0;
+    private int CountCurrent => currentMine?.Count ?? 0;
+    private int CountPast => pastMine?.Count ?? 0;
+
+    protected override async Task OnInitializedAsync()
     {
-      loading = true;
+        try
+        {
+            loading = true;
 
-      approvals = await Db.EquipmentRequests
-        .Where(r => r.ManagerEmail == currentUserEmail &&
-                    (r.Status == "Pending" || r.Status == "Needs More Info"))
-        .OrderBy(r => r.SubmittedAt)
-        .ToListAsync();
+            approvals = await Db.EquipmentRequests
+              .Where(r => r.ManagerEmail == currentUserEmail &&
+                          (r.Status == "Pending" || r.Status == "Needs More Info"))
+              .OrderBy(r => r.SubmittedAt)
+              .ToListAsync();
 
-      mine = await Db.EquipmentRequests
-        .Where(r => r.Email == currentUserEmail)
-        .OrderByDescending(r => r.SubmittedAt)
-        .ToListAsync();
+            var mineAll = await Db.EquipmentRequests
+              .Where(r => r.Email == currentUserEmail)
+              .OrderByDescending(r => r.SubmittedAt)
+              .ToListAsync();
+
+            currentMine = mineAll
+              .Where(r => !r.IsClosed &&
+                          (r.Status == "Pending" ||
+                           r.Status == "Needs More Info" ||
+                           r.Status == "Approved"))
+              .ToList();
+
+            pastMine = mineAll
+              .Where(r => r.IsClosed ||
+                         !(r.Status == "Pending" ||
+                           r.Status == "Needs More Info" ||
+                           r.Status == "Approved"))
+              .ToList();
+        }
+        catch (Exception ex) { loadError = ex.Message; }
+        finally { loading = false; }
     }
-    catch (Exception ex) { loadError = ex.Message; }
-    finally { loading = false; }
-  }
 
-  private string StatusClass(string status) => status switch
-  {
-    "Approved" => "status-approved",
-    "Denied" => "status-denied",
-    "Needs More Info" or "Pending" => "status-pending",
-    "Returned" or "Cancelled" => "status-neutral",
-    _ => "status-neutral"
-  };
+    private void SetTab(ManagerTab t) { MTab = t; StateHasChanged(); }
 
-  private async Task Approve(int id)
-  {
-    var r = await Db.EquipmentRequests.FindAsync(id);
-    if (r is null) return;
-    r.Status = "Approved";
-    await Db.SaveChangesAsync();
-    approvals.RemoveAll(x => x.Id == id);
-    StateHasChanged();
-  }
+    private string StatusClass(string status) => status switch
+    {
+        "Approved" => "status-approved",
+        "Denied" => "status-denied",
+        "Needs More Info" or "Pending" => "status-pending",
+        "Returned" or "Cancelled" => "status-neutral",
+        _ => "status-neutral"
+    };
 
-  private async Task Deny(int id)
-  {
-    var r = await Db.EquipmentRequests.FindAsync(id);
-    if (r is null) return;
-    r.Status = "Denied";
-    r.IsClosed = true;
-    await Db.SaveChangesAsync();
-    approvals.RemoveAll(x => x.Id == id);
-    StateHasChanged();
-  }
+    private async Task Approve(int id)
+    {
+        var r = await Db.EquipmentRequests.FindAsync(id);
+        if (r is null) return;
+        r.Status = "Approved";
+        await Db.SaveChangesAsync();
+        approvals.RemoveAll(x => x.Id == id);
+        StateHasChanged();
+    }
 
-    private void GoToNew() => Nav.NavigateTo("/request/new?return=/manager");
+    private async Task Deny(int id)
+    {
+        var r = await Db.EquipmentRequests.FindAsync(id);
+        if (r is null) return;
+        r.Status = "Denied";
+        r.IsClosed = true;
+        await Db.SaveChangesAsync();
+        approvals.RemoveAll(x => x.Id == id);
+        StateHasChanged();
+    }
+    private void SignOut()
+    {
+
+        Nav.NavigateTo("/login", forceLoad: true);
+    }
+    private void GoToNew()
+        => Nav.NavigateTo($"/request/new?return=/manager&forEmail={Uri.EscapeDataString(currentUserEmail)}");
 
 }

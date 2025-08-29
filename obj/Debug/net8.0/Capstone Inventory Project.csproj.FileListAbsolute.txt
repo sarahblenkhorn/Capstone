@@ -7,11 +7,12 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\Login.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\ManagerPage.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\RedirectToLogin.razor
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\Reports.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\RequestDetail.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\RequestNew.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\UserPage.razor
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Routes.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\_Imports.razor
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\_RoutesInfo.razor
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Capstone_Inventory_Project.staticwebassets.runtime.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Capstone_Inventory_Project.staticwebassets.endpoints.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Capstone_Inventory_Project.exe
@@ -171,4 +172,3 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone_Inventory_Project.pdb
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.genruntimeconfig.cache
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\ref\Capstone_Inventory_Project.dll
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Pages\Reports.razor
