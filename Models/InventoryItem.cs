@@ -11,10 +11,10 @@ namespace Capstone_Inventory_Project.Models
         public string EquipmentType { get; set; } = "";
 
         [StringLength(120)]
-        public string? Model { get; set; }
+        public string? EquipmentModel { get; set; }
 
         [StringLength(120)]
-        public string? SerialNumber { get; set; }
+        public string? EquipmentSerial{ get; set; }
 
         [Required, StringLength(30)]
         public string Status { get; set; } = "Available";

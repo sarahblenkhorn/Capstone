@@ -1,0 +1,102 @@
+﻿@page "/reports"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="reports-page">
+    <div class="toolbar no-print">
+        <select class="form-select">
+            <option>Requests</option>
+        </select>
+
+        <input type="date" value="@FromDate.ToString("yyyy-MM-dd")" />
+        <input type="date" value="@ToDate.ToString("yyyy-MM-dd")" />
+
+        <button class="btn btn-primary" type="button" @onclick="Generate">Generate</button>
+        <button class="btn btn-primary" type="button" onclick="window.print()">Print</button>
+        <button class="btn btn-outline-secondary" type="button" @onclick="Close">Close</button>
+    </div>
+
+    <div id="reportContent" class="report-dialog">
+        <h3 class="report-title">Requests (@FromDate – @ToDate)</h3>
+        <div class="generated-on no-print">Generated @DateTime.Now.ToString("g")</div>
+
+        <div class="table-wrap">
+            <table class="table report-table">
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn.btn-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+    }
+
+        .btn.btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+        .btn.btn-primary:disabled {
+            opacity: .65;
+        }
+
+    .btn.btn-outline-secondary {
+        background: #fff;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+        .btn.btn-outline-secondary:hover {
+            background: #f9fafb;
+        }
+
+    @@media print {
+        .reports-page * {
+            visibility: hidden;
+        }
+
+        .reports-page #reportContent,
+        .reports-page #reportContent * {
+            visibility: visible;
+        }
+
+        .reports-page .no-print {
+            display: none !important;
+        }
+
+        .reports-page #reportContent {
+            position: static !important;
+            inset: auto !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background: #fff !important;
+        }
+
+        .reports-page .table-wrap,
+        .reports-page .report-table {
+            max-height: none !important;
+            overflow: visible !important;
+            width: 100% !important;
+        }
+
+        @@page {
+            margin: 12mm;
+        }
+
+        body {
+            margin: 0;
+        }
+    }
+</style>
+
+@code {
+    private DateOnly FromDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-30));
+    private DateOnly ToDate = DateOnly.FromDateTime(DateTime.Today);
+
+    private void Generate() { }
+
+    private void Close() => Nav.NavigateTo("/admin");
+}

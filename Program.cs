@@ -1,19 +1,20 @@
 using Capstone_Inventory_Project;
 using Capstone_Inventory_Project.Components;
 using Capstone_Inventory_Project.Data;
+using Capstone_Inventory_Project.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 var dataDir = Path.Combine(builder.Environment.ContentRootPath, "app_data");
-Directory.CreateDirectory(dataDir);                   
-var dbPath = Path.Combine(dataDir, "equipment.db");   
+Directory.CreateDirectory(dataDir);
+var dbPath = Path.Combine(dataDir, "equipment.db");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
-
+builder.Services.AddScoped<AppState>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
