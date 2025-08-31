@@ -48,9 +48,9 @@
     }
 
     .pill-gray {
-        background: #f3f4f6;
-        border-color: #e5e7eb;
-        color: #374151
+        background: #fdf2f8;
+        border-color: #fbcfe8;
+        color: #9d174d
     }
 
     .pill.active {
@@ -69,7 +69,7 @@
 
     .user-box {
         width: 100%;
-        max-width: 700px;
+        max-width: 900px;
         padding: 2rem;
         border: 1px solid #ccc;
         border-radius: 10px;
@@ -137,29 +137,17 @@
     }
 
     .request-status {
-        min-width: 140px;
-        text-align: right;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 110px; 
+        height: 28px;
+        padding: 0 .5rem;
+        border-radius: .35rem;
+        text-align: center;
+        font-weight: 600;
     }
 
-    .status-approved {
-        color: green;
-        font-weight: bold;
-    }
-
-    .status-denied {
-        color: red;
-        font-weight: bold;
-    }
-
-    .status-pending {
-        color: orange;
-        font-weight: bold;
-    }
-
-    .status-neutral {
-        color: gray;
-        font-weight: bold;
-    }
 
     .page-wrap {
         display: flex;

@@ -17,7 +17,7 @@
 
     .user-box {
         width: 100%;
-        max-width: 700px;
+        max-width: 900px;
         padding: 2rem;
         border: 1px solid #ccc;
         border-radius: 10px;
@@ -443,9 +443,24 @@
                         {
                             <li>
                                 <div>
-                                    <a href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
-                                    <div class="req-meta">
-                                        @r.SubmittedAt.ToLocalTime().ToString("g") · @r.EquipmentType
+                                    <div class="req-main">
+                                        <a class="req-title" href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
+                                        <div class="req-meta">
+                                            Submitted @r.SubmittedAt.ToLocalTime().ToString("g")
+                                            · @r.EquipmentType
+                                            @if (!string.IsNullOrWhiteSpace(r.EquipmentModel))
+                                            {
+                                                <text> · Model @r.EquipmentModel</text>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(r.EquipmentSerial))
+                                            {
+                                                <text> · Serial @r.EquipmentSerial</text>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                            {
+                                                <text> · Reason: @r.Reason</text>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                                 <span class="@StatusClass(r.Status)">@r.Status</span>
@@ -469,9 +484,24 @@
                         {
                             <li>
                                 <div>
-                                    <a href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
-                                    <div class="req-meta">
-                                        @r.SubmittedAt.ToLocalTime().ToString("g") · @r.EquipmentType
+                                    <div class="req-main">
+                                        <a class="req-title" href="@($"/request/{r.Id}?from=manager")">Request @r.Id</a>
+                                        <div class="req-meta">
+                                            Submitted @r.SubmittedAt.ToLocalTime().ToString("g")
+                                            · @r.EquipmentType
+                                            @if (!string.IsNullOrWhiteSpace(r.EquipmentModel))
+                                            {
+                                                <text> · Model @r.EquipmentModel</text>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(r.EquipmentSerial))
+                                            {
+                                                <text> · Serial @r.EquipmentSerial</text>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(r.Reason))
+                                            {
+                                                <text> · Reason: @r.Reason</text>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                                 <span class="@StatusClass(r.Status)">@r.Status</span>

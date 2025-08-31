@@ -1,74 +1,102 @@
 ﻿@page "/reports"
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.JSInterop
-@inject ApplicationDbContext Db
-@inject IJSRuntime JS
 @rendermode InteractiveServer
+@inject NavigationManager Nav
 
-<h3>Reports</h3>
+<div class="reports-page">
+    <div class="toolbar no-print">
+        <select class="form-select">
+            <option>Requests</option>
+        </select>
 
-<div class="user-header">
-    <h2 class="form-title">Hello, Admin</h2>
-</div>
+        <input type="date" value="@FromDate.ToString("yyyy-MM-dd")" />
+        <input type="date" value="@ToDate.ToString("yyyy-MM-dd")" />
 
-<div class="admin-toolbar">
-    <div class="btn-group btn-group-sm" role="group" aria-label="admin quick nav">
-        <a class="btn btn-outline-secondary" href="/admin">Requests/Inventory</a>
-        <a class="btn btn-outline-primary" href="/reports">Reports</a>
+        <button class="btn btn-primary" type="button" @onclick="Generate">Generate</button>
+        <button class="btn btn-primary" type="button" onclick="window.print()">Print</button>
+        <button class="btn btn-outline-secondary" type="button" @onclick="Close">Close</button>
     </div>
-</div>
 
-<div class="card mb-3">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Closed Requests</span>
-        <div>
-            <input type="date" @bind="from" class="form-control form-control-sm d-inline-block" style="width:160px" />
-            <input type="date" @bind="to" class="form-control form-control-sm d-inline-block ms-1" style="width:160px" />
-            <button class="btn btn-sm btn-outline-primary ms-2" @onclick="ExportClosedCsv">Export CSV</button>
+    <div id="reportContent" class="report-dialog">
+        <h3 class="report-title">Requests (@FromDate – @ToDate)</h3>
+        <div class="generated-on no-print">Generated @DateTime.Now.ToString("g")</div>
+
+        <div class="table-wrap">
+            <table class="table report-table">
+            </table>
         </div>
     </div>
-    <div class="card-body p-0">
-        <table class="table mb-0">
-            <thead><tr><th>Closed</th><th>Requester</th><th>Equipment</th><th>Status</th><th>Note</th></tr></thead>
-            <tbody>
-                @foreach (var r in closed)
-                {
-                    <tr>
-                        <td>@r.ClosedAt?.ToLocalTime().ToString("g")</td>
-                        <td>@r.RequesterName (@r.Email)</td>
-                        <td>@r.EquipmentType @r.EquipmentModel @r.EquipmentSerial</td>
-                        <td>@r.Status</td>
-                        <td>@r.CloseNote</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
 </div>
 
+<style>
+    .btn.btn-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+    }
+
+        .btn.btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+        .btn.btn-primary:disabled {
+            opacity: .65;
+        }
+
+    .btn.btn-outline-secondary {
+        background: #fff;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+        .btn.btn-outline-secondary:hover {
+            background: #f9fafb;
+        }
+
+    @@media print {
+        .reports-page * {
+            visibility: hidden;
+        }
+
+        .reports-page #reportContent,
+        .reports-page #reportContent * {
+            visibility: visible;
+        }
+
+        .reports-page .no-print {
+            display: none !important;
+        }
+
+        .reports-page #reportContent {
+            position: static !important;
+            inset: auto !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background: #fff !important;
+        }
+
+        .reports-page .table-wrap,
+        .reports-page .report-table {
+            max-height: none !important;
+            overflow: visible !important;
+            width: 100% !important;
+        }
+
+        @@page {
+            margin: 12mm;
+        }
+
+        body {
+            margin: 0;
+        }
+    }
+</style>
+
 @code {
-    private DateTime from = DateTime.Today.AddDays(-30), to = DateTime.Today;
-    private List<EquipmentRequest> closed = new();
+    private DateOnly FromDate = DateOnly.FromDateTime(DateTime.Today.AddDays(-30));
+    private DateOnly ToDate = DateOnly.FromDateTime(DateTime.Today);
 
-    protected override async Task OnInitializedAsync() => await LoadAsync();
+    private void Generate() { }
 
-    private async Task LoadAsync()
-    {
-        closed = await Db.EquipmentRequests
-          .Where(r => r.IsClosed && r.ClosedAt >= from && r.ClosedAt < to.AddDays(1))
-          .OrderByDescending(r => r.ClosedAt).ToListAsync();
-    }
-
-    private async Task ExportClosedCsv()
-    {
-        await LoadAsync();
-        var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"Closed Requests Report,Generated {DateTime.Now:g}");
-        sb.AppendLine("Closed,Requester,Email,Equipment,Model,Serial,Status,Note");
-        foreach (var r in closed)
-            sb.AppendLine($"{r.ClosedAt:g},{r.RequesterName},{r.Email},{r.EquipmentType},{r.EquipmentModel},{r.EquipmentSerial},{r.Status},\"{r.CloseNote}\"");
-
-        var bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
-        await JS.InvokeVoidAsync("downloadBytes", "closed-requests.csv", "text/csv", bytes);
-    }
+    private void Close() => Nav.NavigateTo("/admin");
 }

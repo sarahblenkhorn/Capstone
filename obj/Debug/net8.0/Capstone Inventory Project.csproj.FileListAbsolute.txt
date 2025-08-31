@@ -1,3 +1,11 @@
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.csproj.AssemblyReference.cache
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.AssemblyInfoInputs.cache
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.AssemblyInfo.cs
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.csproj.CoreCompileInputs.cache
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone_Inventory_Project.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.sourcelink.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\appsettings.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\Components\Layout\MainLayout.razor
@@ -146,14 +154,6 @@ C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Projec
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.csproj.AssemblyReference.cache
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.AssemblyInfoInputs.cache
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.AssemblyInfo.cs
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.csproj.CoreCompileInputs.cache
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone_Inventory_Project.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\Capstone Inventory Project.sourcelink.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\sarah\source\repos\Capstone Inventory Project\Capstone Inventory Project\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json

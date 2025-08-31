@@ -40,7 +40,8 @@
         color: #374151;
         cursor: pointer;
         user-select: none;
-        transition: all .12s
+        transition: all .12s;
+        font-size: .79rem;
     }
 
         .pill:hover {
@@ -48,13 +49,18 @@
         }
 
         .pill .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1.5rem;
+            height: 1.3rem;
+            padding: 0 .45rem;
+            border-radius: 9999px;
             background: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 9999px;
-            padding: .05rem .45rem;
-            font-weight: 700;
-            font-size: .8rem;
-            line-height: 1.2
+            line-height: 1;
+            font-weight: 600;
+            font-size: .85rem;
         }
 
     .pill-req {
@@ -518,9 +524,98 @@
         font-weight: 700;
     }
 
+    .btn.btn-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd
+    }
+
+        .btn.btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca
+        }
+
+        .btn.btn-primary:disabled {
+            opacity: .65
+        }
+
+    @@media print {
+        /* hide admin UI, show only report */
+        #adminRoot {
+            display: none !important;
+        }
+
+        #reportPrint {
+            display: block !important;
+            position: static !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+            #reportPrint.report-modal-backdrop,
+            #reportPrint .report-modal {
+                display: block !important;
+                position: static !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border: 0 !important;
+            }
+
+            #reportPrint .no-print {
+                display: none !important;
+            }
+
+            #reportPrint .scroll-box {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+        .report-table {
+            width: 100% !important;
+            overflow: visible !important;
+            border-spacing: 0 8px;
+            page-break-inside: auto; /* allow the table to start on page 1 */
+        }
+
+            .report-table thead {
+                display: table-header-group !important;
+            }
+
+            .report-table tfoot {
+                display: table-footer-group !important;
+            }
+            /* keep rows/cells intact, but do NOT block the table from breaking */
+            .report-table tr {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .report-table th,
+            .report-table td {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+        #reportPrint h1,
+        #reportPrint h2,
+        #reportPrint h3 {
+            margin-top: 0 !important;
+        }
+
+        @@page {
+            margin: 12mm;
+        }
+
+        body {
+            margin: 0;
+        }
+    }
 </style>
 
-<div class="user-container">
+<div id="adminRoot" class="user-container">
     <div class="user-box">
         <div class="topbar">
             <div class="toolbar">
@@ -533,7 +628,7 @@
             </button>
         </div>
 
-        <h2 class="form-title mb-3" style="text-align:center">Hello, Admin</h2>
+        <h2 class="form-title mb-4" style="text-align:center">Hello, Admin</h2>
 
         <div class="searchbar">
             <input class="form-control search-control"
@@ -562,10 +657,8 @@
         @if (Tab == AdminTab.Requests)
         {
             <div class="block">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="section-title mb-0">Current Requests</h2>
-                </div>
-
+                <h4 class="section-title">Current Requests</h4>
+                <hr />
                 @if (_requests is null)
                 {
                     <p>Loading…</p>
@@ -693,7 +786,7 @@
         {
             <div class="block">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="section-title mb-0">Available Inventory</h2>
+                    <h4 class="section-title mb-0">Available Inventory</h4>
                     <div class="d-flex align-items-center" style="gap:.5rem">
                         <select id="availFilter" class="form-select form-select-sm" style="flex:0 0 320px;width:320px;min-width:320px" @onchange="OnAvailFilterChange">
                             <option value="">All items</option>
@@ -822,7 +915,7 @@
         @if (Tab == AdminTab.Assigned)
         {
             <div class="block">
-                <h2 class="section-title">Assigned Inventory</h2>
+                <h4 class="section-title">Assigned Inventory</h4>
                 <hr />
                 @if (_assignedInv is null)
                 {
@@ -864,7 +957,7 @@
         @if (Tab == AdminTab.Returned)
         {
             <div class="block">
-                <h2 class="section-title">Returned Inventory</h2>
+                <h4 class="section-title">Returned Inventory</h4>
                 <hr />
                 @if (_returnedInv is null)
                 {
@@ -909,7 +1002,7 @@
         @if (Tab == AdminTab.Repair)
         {
             <div class="block">
-                <h2 class="section-title">Repair</h2>
+                <h4 class="section-title">Under Repair</h4>
                 <hr />
                 @if (_repairInv is null)
                 {
@@ -952,7 +1045,7 @@
         @if (Tab == AdminTab.Recycled)
         {
             <div class="block">
-                <h2 class="section-title">Recycled Inventory</h2>
+                <h4 class="section-title">Recycled Inventory</h4>
                 <hr />
                 @if (_recycledInv is null)
                 {
@@ -994,7 +1087,7 @@
         @if (Tab == AdminTab.Closed)
         {
             <div class="block">
-                <h2 class="section-title">Closed Requests</h2>
+                <h4 class="section-title">Closed Requests</h4>
                 <hr />
                 @if (_closed is null)
                 {
@@ -1038,53 +1131,64 @@
                 }
             </div>
         }
+        </div>
+    </div>
 
-        @if (showReport)
-        {
-            <div class="report-modal-backdrop">
-                <div class="report-modal">
-                    <div class="d-flex align-items-center" style="gap:.6rem;flex-wrap:wrap;margin-bottom:10px">
-                        <select class="form-select form-select-sm" style="min-width:180px" @bind="_reportType">
-                            <option value="Requests">Requests</option>
-                            <option value="Inventory">Inventory</option>
-                        </select>
-                        <input class="form-control form-control-sm" style="width:170px" type="date" @bind="startDate" />
-                        <input class="form-control form-control-sm" style="width:170px" type="date" @bind="endDate" />
-                        <button class="btn btn-sm btn-primary" @onclick="GenerateReportAsync">Generate</button>
-                        <button class="btn btn-sm btn-outline-secondary" style="margin-left:auto" @onclick="() => showReport = false">Close</button>
+@if (showReport)
+{
+    <div id="reportPrint" class="report-modal-backdrop">
+        <div class="report-modal">
+            <div class="d-flex align-items-center no-print" style="gap:.6rem;flex-wrap:wrap;margin-bottom:10px">
+                <select class="form-select form-select-sm" style="min-width:180px" @bind="_reportType">
+                    <option value="Requests">Requests</option>
+                    <option value="Inventory">Inventory</option>
+                </select>
+                <input class="form-control form-control-sm" style="width:170px" type="date" @bind="startDate" />
+                <input class="form-control form-control-sm" style="width:170px" type="date" @bind="endDate" />
+                <button class="btn btn-sm btn-primary" @onclick="GenerateReportAsync">Generate</button>
+                <button class="btn btn-sm btn-primary" type="button" onclick="window.print()">Print</button>
+                <button class="btn btn-sm btn-outline-secondary" style="margin-left:auto" @onclick="() => showReport = false">Close</button>
+            </div>
+
+            @if (_report is not null)
+            {
+                <div>
+                    <div class="report-head">
+                        <h3 class="mb-0">@_report.Title</h3>
+                        <div class="small-muted">Generated @_report.GeneratedLocal.ToString("g")</div>
                     </div>
 
-                    @if (_report is not null)
-                    {
-                        <div>
-                            <div class="report-head">
-                                <h3 class="mb-0">@_report.Title</h3>
-                                <div class="small-muted">Generated @_report.GeneratedLocal.ToString("g")</div>
-                            </div>
-                            <div class="@((_report.Rows.Count > 10) ? "scroll-box scroll-tight" : null)">
-                                <table class="report-table">
-                                    <thead><tr>@foreach (var c in _report.Columns){
-                                    <th>@c</th>
-                                }
-    </tr></thead>
-                                <tbody>
-                                    @foreach (var row in _report.Rows)
+                    <div class="@((_report.Rows.Count > 10) ? "scroll-box scroll-tight" : null)">
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    @foreach (var c in _report.Columns)
                                     {
-                                        <tr>@for (int i=0;i<_report.Columns.Count;i++){
-                                        <td>@row[i]</td>
+                                        <th>@c</th>
                                     }
-    </tr>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in _report.Rows)
+                                {
+                                    <tr>
+                                        @for (int i = 0; i < _report.Columns.Count; i++)
+                                        {
+                                            <td>@row[i]</td>
+                                        }
+                                    </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                                }
-            </div>
+            }
         </div>
-                }
     </div>
-</div>
+}
+
+
+
 
 @code {
     private enum AdminTab { Requests, Available, Assigned, Returned, Repair, Recycled, Closed }

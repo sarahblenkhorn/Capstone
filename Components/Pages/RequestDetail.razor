@@ -91,7 +91,7 @@
         display: flex;
         gap: .5rem;
         margin: 10px auto 6px;
-        justify-content: center
+        justify-content: left
     }
 
     .btn {
@@ -106,8 +106,16 @@
     }
 
     .btn-primary {
-        border-color: #0d6efd
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
     }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
 
     .btn-outline {
         background: #fff
@@ -226,7 +234,6 @@
                         </div>
 
                         <div class="btnbar">
-                            <button type="button" class="btn" @onclick="GoBack">Back</button>
 
                             @if (CanEdit && !isEditing)
                             {

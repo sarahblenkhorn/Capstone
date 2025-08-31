@@ -6,6 +6,34 @@ html, body {
     font-family: var(--bs-body-font-family) !important;
 }
 
+.pill .badge {
+    color: #111 !important; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.25rem;
+    padding: 0 .45rem;
+    border-radius: 9999px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    font-weight: 700;
+    font-size: .85rem;
+    line-height: 1;
+}
+
+    .pill .badge:empty {
+        display: none;
+    }
+
+.tabbar {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: .5rem;
+  overflow-x: auto;
+  padding-bottom: .25rem;
+}
+
 h1, h2, h3, h4, h5, h6,
 p, label, input, select, textarea,
 table, th, td,
